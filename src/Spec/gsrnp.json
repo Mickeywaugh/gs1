@@ -1,0 +1,37 @@
+{
+    "12": {
+        "optionKey": "12",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{12})\\.([0-9]{5})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    },
+    "11": {
+        "optionKey": "11",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{11})\\.([0-9]{6})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    },
+    "10": {
+        "optionKey": "10",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{10})\\.([0-9]{7})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    },
+    "9": {
+        "optionKey": "9",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{9})\\.([0-9]{8})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    },
+    "8": {
+        "optionKey": "8",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{8})\\.([0-9]{9})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    },
+    "7": {
+        "optionKey": "7",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{7})\\.([0-9]{10})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    },
+    "6": {
+        "optionKey": "6",
+        "pattern": "\/^urn:epc:id:gsrnp:([0-9]{6})\\.([0-9]{11})$\/",
+        "grammar": "'urn:epc:id:gsrnp:' gs1companyprefix '.' serviceref"
+    }
+}

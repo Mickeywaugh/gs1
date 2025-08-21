@@ -1,0 +1,5 @@
+{
+    "optionKey": "1",
+    "pattern": "\/^urn:epc:id:gid:([0-9]{1,9})\\.([0-9]{1,8})\\.([0-9]{1,11})$\/",
+    "grammar": "'urn:epc:id:gid:' generalmanager '.' objectclass '.' serial"
+}

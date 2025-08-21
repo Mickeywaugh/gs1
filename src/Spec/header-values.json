@@ -1,0 +1,134 @@
+{
+    "2C": {
+        "encoding": "gdti-96",
+        "tagSize": 96,
+        "scheme": "gdti",
+        "prefix": "00101100"
+    },
+    "2D": {
+        "encoding": "gsrn-96",
+        "tagSize": 96,
+        "scheme": "gsrn",
+        "prefix": "00101101"
+    },
+    "2E": {
+        "encoding": "gsrnp-96",
+        "tagSize": 96,
+        "scheme": "gsrnp",
+        "prefix": "00101110"
+    },
+    "2F": {
+        "encoding": "usdod-96",
+        "tagSize": 96,
+        "scheme": "usdod",
+        "prefix": "00110101"
+    },
+    "30": {
+        "encoding": "sgtin-96",
+        "tagSize": 96,
+        "scheme": "sgtin",
+        "prefix": "00110110"
+    },
+    "31": {
+        "encoding": "sscc-96",
+        "tagSize": 96,
+        "scheme": "sscc",
+        "prefix": "00110001"
+    },
+    "32": {
+        "encoding": "sgln-96",
+        "tagSize": 96,
+        "scheme": "sgln",
+        "prefix": "00110010"
+    },
+    "33": {
+        "encoding": "grai-96",
+        "tagSize": 96,
+        "scheme": "grai",
+        "prefix": "00110011"
+    },
+    "34": {
+        "encoding": "giai-96",
+        "tagSize": 96,
+        "scheme": "giai",
+        "prefix": "00110100"
+    },
+    "35": {
+        "encoding": "gid-96",
+        "tagSize": 96,
+        "scheme": "gid",
+        "prefix": "00110101"
+    },
+    "36": {
+        "encoding": "sgtin-198",
+        "tagSize": 198,
+        "scheme": "sgtin",
+        "prefix": "00110000"
+    },
+    "37": {
+        "encoding": "grai-170",
+        "tagSize": 170,
+        "scheme": "grai",
+        "prefix": "00110111"
+    },
+    "38": {
+        "encoding": "giai-170",
+        "tagSize": 202,
+        "scheme": "giai",
+        "prefix": "00111000"
+    },
+    "39": {
+        "encoding": "sgln-195",
+        "tagSize": 195,
+        "scheme": "sgln",
+        "prefix": "00111001"
+    },
+    "3A": {
+        "encoding": "gdti-113",
+        "tagSize": 113,
+        "scheme": "gdti",
+        "prefix": "00111010"
+    },
+    "3B": {
+        "encoding": "adi-var",
+        "tagSize": "var",
+        "scheme": "adi",
+        "prefix": "00111011"
+    },
+    "3C": {
+        "encoding": "cpi-96",
+        "tagSize": 96,
+        "scheme": "cpi",
+        "prefix": "00111100"
+    },
+    "3D": {
+        "encoding": "cpi-var",
+        "tagSize": "var",
+        "scheme": "cpi",
+        "prefix": "00111101"
+    },
+    "3E": {
+        "encoding": "gdti-174",
+        "tagSize": 174,
+        "scheme": "gdti",
+        "prefix": "00111110"
+    },
+    "3F": {
+        "encoding": "sgcn-96",
+        "tagSize": 96,
+        "scheme": "sgcn",
+        "prefix": "00111111"
+    },
+    "40": {
+        "encoding": "itip-110",
+        "tagSize": 110,
+        "scheme": "itip",
+        "prefix": "01000000"
+    },
+    "41": {
+        "encoding": "itip-212",
+        "tagSize": 212,
+        "scheme": "itip",
+        "prefix": "01000001"
+    }
+}

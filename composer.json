@@ -1,0 +1,20 @@
+{
+    "name": "mickeywaugh/gs1",
+    "description": "GS1 EPC coding library for PHP",
+    "type": "library",
+    "require": {
+        "php": "^8.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mickeywaugh\\Gs1\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mickeywaugh",
+            "email": "mickeywaugh@163.com"
+        }
+    ]
+}

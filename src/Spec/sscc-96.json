@@ -1,0 +1,402 @@
+{
+    "BINARY": {
+        "type": "BINARY",
+        "prefixMatch": "00110001",
+        "requiredFormattingParameters": "filter,taglength",
+        "option": {
+            "12": {
+                "optionKey": "12",
+                "pattern": "\/^00110001([01]{3})000([01]{40})([01]{18})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '000' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "000",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "999999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "40",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "99999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "18",
+                        "name": "serialref"
+                    }
+                }
+            },
+            "11": {
+                "optionKey": "11",
+                "pattern": "\/^00110001([01]{3})001([01]{37})([01]{21})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '001' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "001",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "99999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "37",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "21",
+                        "name": "serialref"
+                    }
+                }
+            },
+            "10": {
+                "optionKey": "10",
+                "pattern": "\/^00110001([01]{3})010([01]{34})([01]{24})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '010' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "010",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "9999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "34",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "9999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "24",
+                        "name": "serialref"
+                    }
+                }
+            },
+            "9": {
+                "optionKey": "9",
+                "pattern": "\/^00110001([01]{3})011([01]{30})([01]{28})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '011' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "011",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "30",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "99999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "28",
+                        "name": "serialref"
+                    }
+                }
+            },
+            "8": {
+                "optionKey": "8",
+                "pattern": "\/^00110001([01]{3})100([01]{27})([01]{31})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '100' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "100",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "99999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "27",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "31",
+                        "name": "serialref"
+                    }
+                }
+            },
+            "7": {
+                "optionKey": "7",
+                "pattern": "\/^00110001([01]{3})101([01]{24})([01]{34})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '101' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "101",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "9999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "24",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "9999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "34",
+                        "name": "serialref"
+                    }
+                }
+            },
+            "6": {
+                "optionKey": "6",
+                "pattern": "\/^00110001([01]{3})110([01]{20})([01]{38})000000000000000000000000$\/",
+                "grammar": "'00110001' filter '110' gs1companyprefix serialref '000000000000000000000000'",
+                "filter": "110",
+                "field": {
+                    "filter": {
+                        "seq": "1",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "7",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "3",
+                        "name": "filter"
+                    },
+                    "gs1companyprefix": {
+                        "seq": "2",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "20",
+                        "name": "gs1companyprefix"
+                    },
+                    "serialref": {
+                        "seq": "3",
+                        "decimalMinimum": "0",
+                        "decimalMaximum": "99999999999",
+                        "characterSet": "[01]*",
+                        "bitPadDir": "LEFT",
+                        "bitLength": "38",
+                        "name": "serialref"
+                    }
+                }
+            }
+        }
+    },
+    "PURE_IDENTITY": {
+        "12": {
+            "optionKey": "12",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{12})\\.([0-9]{5})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        },
+        "11": {
+            "optionKey": "11",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{11})\\.([0-9]{6})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        },
+        "10": {
+            "optionKey": "10",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{10})\\.([0-9]{7})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        },
+        "9": {
+            "optionKey": "9",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{9})\\.([0-9]{8})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        },
+        "8": {
+            "optionKey": "8",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{8})\\.([0-9]{9})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        },
+        "7": {
+            "optionKey": "7",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{7})\\.([0-9]{10})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        },
+        "6": {
+            "optionKey": "6",
+            "pattern": "\/^urn:epc:id:sscc:([0-9]{6})\\.([0-9]{11})$\/",
+            "grammar": "'urn:epc:id:sscc:' gs1companyprefix '.' serialref"
+        }
+    },
+    "TAG_ENCODING": {
+        "12": {
+            "optionKey": "12",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{12})\\.([0-9]{5})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        },
+        "11": {
+            "optionKey": "11",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{11})\\.([0-9]{6})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        },
+        "10": {
+            "optionKey": "10",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{10})\\.([0-9]{7})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        },
+        "9": {
+            "optionKey": "9",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{9})\\.([0-9]{8})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        },
+        "8": {
+            "optionKey": "8",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{8})\\.([0-9]{9})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        },
+        "7": {
+            "optionKey": "7",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{7})\\.([0-9]{10})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        },
+        "6": {
+            "optionKey": "6",
+            "pattern": "\/^urn:epc:tag:sscc-96:([0-7]{1})\\.([0-9]{6})\\.([0-9]{11})$\/",
+            "grammar": "'urn:epc:tag:sscc-96:' filter '.' gs1companyprefix '.' serialref"
+        }
+    },
+    "LEGACY": {
+        "12": {
+            "optionKey": "12",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "11": {
+            "optionKey": "11",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "10": {
+            "optionKey": "10",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "9": {
+            "optionKey": "9",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "8": {
+            "optionKey": "8",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "7": {
+            "optionKey": "7",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "6": {
+            "optionKey": "6",
+            "pattern": "\/^sscc=([0-9]{18})$\/",
+            "grammar": "'sscc=' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        }
+    },
+    "LEGACY_AI": {
+        "12": {
+            "optionKey": "12",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "11": {
+            "optionKey": "11",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "10": {
+            "optionKey": "10",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "9": {
+            "optionKey": "9",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "8": {
+            "optionKey": "8",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "7": {
+            "optionKey": "7",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        },
+        "6": {
+            "optionKey": "6",
+            "pattern": "\/^\\(00\\)([0-9]{18})$\/",
+            "grammar": "'(00)' extensiondigit gs1companyprefix serialrefremainder checkdigit"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "1": {
+        "optionKey": "1",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{5})\\.\\.([0-9A-Z\\/-]{1,30})$\/",
+        "grammar": "'urn:epc:id:adi:' cage '.' '.' serial"
+    },
+    "2": {
+        "optionKey": "2",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{5})\\.([0-9A-Z\\/-]{1,32})\\.([0-9A-Z\\/-]{1,30})$\/",
+        "grammar": "'urn:epc:id:adi:' cage '.' originalpartnumber '.' serial"
+    },
+    "3": {
+        "optionKey": "3",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{5})\\.\\.(#[0-9A-Z\\/-]{1,29})$\/",
+        "grammar": "'urn:epc:id:adi:' cage '.' '.' serial"
+    },
+    "4": {
+        "optionKey": "4",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{5})\\.([0-9A-Z\\/-]{1,32})\\.(#[0-9A-Z\\/-]{1,29})$\/",
+        "grammar": "'urn:epc:id:adi:' cage '.' originalpartnumber '.' serial"
+    },
+    "5": {
+        "optionKey": "5",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{6})\\.\\.([0-9A-Z\\/-]{1,30})$\/",
+        "grammar": "'urn:epc:id:adi:' dodaac '.' '.' serial"
+    },
+    "6": {
+        "optionKey": "6",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{6})\\.([0-9A-Z\\/-]{1,32})\\.([0-9A-Z\\/-]{1,30})$\/",
+        "grammar": "'urn:epc:id:adi:' dodaac '.' originalpartnumber '.' serial"
+    },
+    "7": {
+        "optionKey": "7",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{6})\\.\\.(#[0-9A-Z\\/-]{1,29})$\/",
+        "grammar": "'urn:epc:id:adi:' dodaac '.' '.' serial"
+    },
+    "8": {
+        "optionKey": "8",
+        "pattern": "\/^urn:epc:id:adi:([0-9A-HJ-NP-Z]{6})\\.([0-9A-Z\\/-]{1,32})\\.(#[0-9A-Z\\/-]{1,29})$\/",
+        "grammar": "'urn:epc:id:adi:' dodaac '.' originalpartnumber '.' serial"
+    }
+}

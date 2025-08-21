@@ -1,0 +1,37 @@
+{
+    "12": {
+        "optionKey": "12",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{12})\\.([0-9]{0})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    },
+    "11": {
+        "optionKey": "11",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{11})\\.([0-9]{1})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    },
+    "10": {
+        "optionKey": "10",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{10})\\.([0-9]{2})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    },
+    "9": {
+        "optionKey": "9",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{9})\\.([0-9]{3})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    },
+    "8": {
+        "optionKey": "8",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{8})\\.([0-9]{4})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    },
+    "7": {
+        "optionKey": "7",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{7})\\.([0-9]{5})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    },
+    "6": {
+        "optionKey": "6",
+        "pattern": "\/^urn:epc:id:grai:([0-9]{6})\\.([0-9]{6})\\.([!%-?A-Z_a-z\\x22]{1,16})$\/",
+        "grammar": "'urn:epc:id:grai:' gs1companyprefix '.' assettype '.' serial"
+    }
+}

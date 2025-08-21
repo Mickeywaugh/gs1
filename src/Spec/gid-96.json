@@ -1,0 +1,56 @@
+{
+    "BINARY": {
+        "type": "BINARY",
+        "prefixMatch": "00110101",
+        "requiredFormattingParameters": "taglength",
+        "option": {
+            "optionKey": "1",
+            "pattern": "\/^00110101([01]{28})([01]{24})([01]{36})$\/",
+            "grammar": "'00110101' generalmanager objectclass serial",
+            "field": {
+                "generalmanager": {
+                    "seq": "1",
+                    "decimalMinimum": "0",
+                    "decimalMaximum": "268435455",
+                    "characterSet": "[01]*",
+                    "bitPadDir": "LEFT",
+                    "bitLength": "28",
+                    "name": "generalmanager"
+                },
+                "objectclass": {
+                    "seq": "2",
+                    "decimalMinimum": "0",
+                    "decimalMaximum": "16777215",
+                    "characterSet": "[01]*",
+                    "bitPadDir": "LEFT",
+                    "bitLength": "24",
+                    "name": "objectclass"
+                },
+                "serial": {
+                    "seq": "3",
+                    "decimalMinimum": "0",
+                    "decimalMaximum": "68719476735",
+                    "characterSet": "[01]*",
+                    "bitPadDir": "LEFT",
+                    "bitLength": "36",
+                    "name": "serial"
+                }
+            }
+        }
+    },
+    "PURE_IDENTITY": {
+        "optionKey": "1",
+        "pattern": "\/^urn:epc:id:gid:([0-9]{1,9})\\.([0-9]{1,8})\\.([0-9]{1,11})$\/",
+        "grammar": "'urn:epc:id:gid:' generalmanager '.' objectclass '.' serial"
+    },
+    "TAG_ENCODING": {
+        "optionKey": "1",
+        "pattern": "\/^urn:epc:tag:gid-96:([0-9]{1,9})\\.([0-9]{1,8})\\.([0-9]{1,11})$\/",
+        "grammar": "'urn:epc:tag:gid-96:' generalmanager '.' objectclass '.' serial"
+    },
+    "LEGACY": {
+        "optionKey": "1",
+        "pattern": "\/^generalmanager=([0-9]{1,9});objectclass=([0-9]{1,8});serial=([0-9]{1,11})$\/",
+        "grammar": "'generalmanager=' generalmanager ';objectclass=' objectclass ';serial=' serial"
+    }
+}
