@@ -7,12 +7,9 @@ use Mickeywaugh\Gs1\EpcSpec;
 
 /**
  * Description:
- * class for EPC schemes: SGTIN
- * 
+ * EPC base class for all supported EPC schemes 
  * According to specification Gs1 EPC Tag Data Standard Release 1.13 
- * 
- * Author: Mickey Wu <Mickey dot Wu at boingtech dot com>
- * Copyright (c) 2024- Boing Technologies Ltd.  All rights reserved.
+ * Author: Mickeywaugh <Mickeywaugh at qq dot com>
  */
 
 class EpcSgtin extends EpcBase
@@ -210,13 +207,10 @@ class EpcSgtin extends EpcBase
 
         $binary = $prefixMatch . $filterBin . $partitionBin . $companyBin . $itemBin . $serialBin;
 
-        // EpcUtil::log(sprintf("output1: %s", $binary));
         if (strlen($binary) <= $length) {
             $binary = str_pad($binary, $length, 0, 1);
-            // EpcUtil::log(sprintf("output2: %s", $binary));
         } else {
             $binary = substr($binary, 0, $length);
-            // EpcUtil::log(sprintf("output3: %s", $binary));
         }
 
         $hexadecimal = EpcSpec::numberBaseConvert($binary, 2, 16);
@@ -244,7 +238,6 @@ class EpcSgtin extends EpcBase
 
             $epcBinary = EpcSpec::numberBaseConvert($epcHex, 16, 2);
             $headerStruct = $instance->getHeaderStruct();
-            // EpcUtil::log(sprintf("epcBinary: %s", $epcBinary));
             $padedEpcBinary = substr('00' . $epcBinary, 0, $headerStruct['tagSize']);
             if (!$padedEpcBinary || strlen($padedEpcBinary) != $headerStruct['tagSize']) {
                 return $instance->setError(EpcMesg::EPC_BINARY_FORMAT_ERROR);
@@ -255,13 +248,10 @@ class EpcSgtin extends EpcBase
                 ->setTagSize($headerStruct['tagSize']);
 
             $pattern = $instance->getEpcStandard('BINARY');
-            // EpcUtil::debug($pattern);
             //截取filter 二进制段
             $filterBin = substr($epcBinary, 8, 3);
-            // EpcUtil::log(sprintf("filterBin: %s", $filterBin));
             //截取partition 二进制段
             $partitionBin =  substr($epcBinary, 11, 3);
-            // EpcUtil::log(sprintf("partitionBin: %s", $partitionBin));
             //获取二进制分段表;
             $segmentTable = [];
 
@@ -273,22 +263,15 @@ class EpcSgtin extends EpcBase
             }
 
             $tableFiled = $segmentTable['field'];
-            // EpcUtil::log($segmentTable);
             //截取company prefix 二进制段
             $companyPrefixBin = substr($epcBinary, 14, $tableFiled['gs1companyprefix']['bitLength']);
-            // EpcUtil::log(sprintf("companyPrefixBin: %s", $companyPrefixBin));
             //截取item reference 二进制段
             $itemReferBin = substr($epcBinary, 14 + $tableFiled['gs1companyprefix']['bitLength'], $tableFiled['itemref']['bitLength']);
-            // EpcUtil::log(sprintf("itemReferBin: %s", $itemReferBin));
             //截取serial 二进制段
             $serialBin = substr($epcBinary, 14 + $tableFiled['gs1companyprefix']['bitLength'] + $tableFiled['itemref']['bitLength'], $tableFiled['serial']['bitLength']);
-            // EpcUtil::log(sprintf("serialBin: %s", $serialBin));
             $companyPrefixLength = $segmentTable['optionKey'];
 
-            // EpcUtil::log(sprintf("companyPrefixLength: %s", $companyPrefixLength));
-            // EpcUtil::log(sprintf("companyPrefixDec: %s", bindec($companyPrefixBin)));
             $companyPrefix = str_pad(bindec($companyPrefixBin), $companyPrefixLength, 0, 0);
-            // EpcUtil::log(sprintf("companyPrefix: %s", $companyPrefix));
 
             $instance->setFilterValue(bindec($filterBin))
                 ->setCompanyPrefixLength($companyPrefixLength)
@@ -301,7 +284,6 @@ class EpcSgtin extends EpcBase
             } else {
                 $serial = EpcSpec::decodingString($serialBin);
             }
-            // EpcUtil::log(sprintf("serial: %s", $serial));
             if (!$serial) {
                 return $instance->setError(EpcMesg::EPC_BINARY_FORMAT_ERROR);
             }
@@ -311,7 +293,6 @@ class EpcSgtin extends EpcBase
             $CI = $CI . $checkDigit;
 
             $uriSerial = EpcSpec::stringElement2Uri($serial);
-            // EpcUtil::log(sprintf("uriSerial: %s", $uriSerial));
             if ($uriSerial == "") {
                 return $instance->setError(EpcMesg::EPC_BINARY_FORMAT_ERROR);
             }

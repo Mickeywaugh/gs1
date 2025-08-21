@@ -4,11 +4,9 @@ namespace Mickeywaugh\Gs1\Epc;
 
 /**
  * Description:
- * EPC interface to define function for all EPC schemes
- * 
+ * EPC base class for all supported EPC schemes 
  * According to specification Gs1 EPC Tag Data Standard Release 1.13 
- * Author: Mickey Wu <Mickey dot Wu at boingtech dot com>
- * Copyright (c) 2024- Boing Technologies Ltd.  All rights reserved.
+ * Author: Mickeywaugh <Mickeywaugh at qq dot com>
  */
 
 interface EpcInterface

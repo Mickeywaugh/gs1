@@ -9,11 +9,8 @@ use Mickeywaugh\Gs1\EpcSpec;
 /**
  * Description:
  * EPC base class for all supported EPC schemes 
- * 
  * According to specification Gs1 EPC Tag Data Standard Release 1.13 
- * 
  * Author: Mickey Wu <Mickey dot Wu at boingtech dot com>
- * Copyright (c) 2024- Boing Technologies Ltd.  All rights reserved.
  */
 
 abstract class EpcBase implements EpcInterface
