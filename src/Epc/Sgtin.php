@@ -3,7 +3,7 @@
 namespace Mickeywaugh\Gs1\Epc;
 
 use Mickeywaugh\Gs1\Epc\EpcBase;
-use Mickeywaugh\Gs1\EpcSpec;
+use Mickeywaugh\Gs1\Spec\EpcSpec;
 
 /**
  * Description:
@@ -12,7 +12,7 @@ use Mickeywaugh\Gs1\EpcSpec;
  * Author: Mickeywaugh <Mickeywaugh at qq dot com>
  */
 
-class EpcSgtin extends EpcBase
+class Sgtin extends EpcBase
 {
 
     // scheme Sgtin parameters
@@ -22,19 +22,11 @@ class EpcSgtin extends EpcBase
     {
         $this->setScheme("SGTIN")
             ->setCompanyPrefixLength($companyPrefixLength)
-        ;
-    }
-
-    public static function getInstance(int $companyPrefixLength = 0, int $tagSize = 0, int $filterValue = 0, array $schemeParameters = []): ?self
-    {
-        $instance = new self();
-        return $instance->setScheme("SGTIN")
-            ->setCompanyPrefixLength($companyPrefixLength)
             ->setTagSize($tagSize)
             ->setFilterValue($filterValue)
-            ->setSchemeParameters($schemeParameters)
-        ;
+            ->setSchemeParameters($schemeParameters);
     }
+
     /** 
      * @param _schemeParameters check and set the input fields for current EPC scheme:SGTIN;
      * @return this EpcSgtin class entity with valide filter value;

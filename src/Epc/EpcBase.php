@@ -4,7 +4,7 @@ namespace Mickeywaugh\Gs1\Epc;
 
 use Mickeywaugh\Gs1\Epc\EpcInterface;
 use Mickeywaugh\Gs1\Epc\EpcMesg;
-use Mickeywaugh\Gs1\EpcSpec;
+use Mickeywaugh\Gs1\Spec\EpcSpec;
 
 /**
  * Description:

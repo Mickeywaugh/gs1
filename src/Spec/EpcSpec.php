@@ -1,6 +1,6 @@
 <?php
 
-namespace Mickeywaugh\Gs1;
+namespace Mickeywaugh\Gs1\Spec;
 
 /**
  * Description:
@@ -455,7 +455,7 @@ class EpcSpec
      */
     public static function getDataStandard(string $epcScheme): array
     {
-        $jsonFile = sprintf("%s/Spec/%s.json", __DIR__, strtolower($epcScheme));
+        $jsonFile = "./" . strtolower($epcScheme) . ".json";
 
         if (!is_file($jsonFile)) {
             return [];
@@ -472,7 +472,7 @@ class EpcSpec
      */
     public static function getHeaderValues(string $header): ?array
     {
-        $jsonFile = __DIR__ . "/Spec/header-values.json";
+        $jsonFile = __DIR__ . "/header-values.json";
 
         if (!is_file($jsonFile)) {
             return [];
