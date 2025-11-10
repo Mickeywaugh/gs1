@@ -7,7 +7,9 @@ PHP版本自用的GS1规范下的EPC编码解码库;
  引用包`composer require Mickeywaugh/Gs1Epc;`
 
  样例
-`<?php 
+
+```
+<?php 
 
   use Mickeywaugh\Gs1\Gs1;
     //创建实例
@@ -21,4 +23,4 @@ PHP版本自用的GS1规范下的EPC编码解码库;
   $gs1Epc->getEpcRawURI();
   //解码
   $gs1Epc = Gs1::Stgin()::decode();
-`
+```
