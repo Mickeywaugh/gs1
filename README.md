@@ -1,13 +1,13 @@
 # Gs1Epc
 
 #### 介绍
-自用的GS1规范下的EPC编码解码库;
+PHP版本自用的GS1规范下的EPC编码解码库;
+#### 使用方法:
 
-使用方法:
-1. composer require mickeywaugh/gs1;
+1. `composer require mickeywaugh/gs1;`
 
 2.Eg:
-<?php 
+`<?php 
 
   use Mickeywaugh\Gs1;
     //创建实例
@@ -19,3 +19,6 @@
   $gs1Epc->getURI();
   $gs1Epc->getTagUri();
   $gs1Epc->getEpcRawURI();
+  //解码
+  $gs1Epc = Gs1::Stgin()::decode();
+`
