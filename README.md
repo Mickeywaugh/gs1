@@ -7,15 +7,15 @@ PHP版本自用的GS1规范下的EPC编码解码库;
  引用包
  `composer require Mickeywaugh/Gs1;`
 
- 样例
+ #### 代码样例
 
 ```
 <?php 
 
   use Mickeywaugh\Gs1\Gs1;
-    //创建实例
-  $gs1Epc= Gs1::Stgin($companyPrefixLength,$tagSize,$filterValue,$schemeParameters);
   //编码   
+  //创建实例
+  $gs1Epc= Gs1::Stgin($companyPrefixLength,$tagSize,$filterValue,$schemeParameters);
   $gs1Epc->encode();
   //获取编码后各种数据
   $gs1Epc->getEpcBinary();
@@ -23,5 +23,9 @@ PHP版本自用的GS1规范下的EPC编码解码库;
   $gs1Epc->getTagUri();
   $gs1Epc->getEpcRawURI();
   //解码
-  $gs1Epc = Gs1::Stgin()::decode();
+  $gs1Epc = Gs1::Stgin()::decode($epcCode);
+  $gs1Epc->getCompanyPrefixLength();
+  $gs1Epc->getTagSize();
+  $gs1Epc->GETURI();
+  ....
 ```
