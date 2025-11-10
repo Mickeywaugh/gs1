@@ -4,12 +4,12 @@
 PHP版本自用的GS1规范下的EPC编码解码库;
 #### 使用方法:
 
-1. `composer require mickeywaugh/gs1;`
+ 引用包`composer require Mickeywaugh/Gs1Epc;`
 
-2.Eg:
+ 样例
 `<?php 
 
-  use Mickeywaugh\Gs1;
+  use Mickeywaugh\Gs1\Gs1;
     //创建实例
   $gs1Epc= Gs1::Stgin($companyPrefixLength,$tagSize,$filterValue,$schemeParameters);
   //编码   
