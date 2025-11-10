@@ -4,7 +4,8 @@
 PHP版本自用的GS1规范下的EPC编码解码库;
 #### 使用方法:
 
- 引用包`composer require Mickeywaugh/Gs1Epc;`
+ 引用包
+ `composer require Mickeywaugh/Gs1;`
 
  样例
 
