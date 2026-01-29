@@ -485,4 +485,17 @@ class EpcSpec
         }
         return $headerValues[$header];
     }
+
+    /**
+     * @param string $gtinUpc The GTIN/UPC value;
+     * @return int The company prefix length;
+     */
+    public static function getCompanyPrefixLenth(string $gtinUpc): int
+    {
+        $GCPFile = 'gcpprefixformatlist.xml';
+        $xml = simplexml_load_file($GCPFile, "SimpleXMLElement", LIBXML_NOCDATA);
+        // 使用XPath查找具有指定prefix属性的节点
+        $nodes = $xml->xpath("//node()[@prefix='$gtinUpc']");
+        return empty($nodes) ? 0 : (int)$nodes[0]->attributes()->gcpLength;
+    }
 }
