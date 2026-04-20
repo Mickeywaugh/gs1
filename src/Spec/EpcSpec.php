@@ -455,7 +455,7 @@ class EpcSpec
      */
     public static function getDataStandard(string $epcScheme): array
     {
-        $jsonFile = "./" . strtolower($epcScheme) . ".json";
+        $jsonFile = sprintf(__DIR__ . '/resData/%s.json', strtolower($epcScheme));
 
         if (!is_file($jsonFile)) {
             return [];
@@ -472,7 +472,7 @@ class EpcSpec
      */
     public static function getHeaderValues(string $header): ?array
     {
-        $jsonFile = __DIR__ . "/header-values.json";
+        $jsonFile = __DIR__ . "/resData/header-values.json";
 
         if (!is_file($jsonFile)) {
             return [];
@@ -492,7 +492,7 @@ class EpcSpec
      */
     public static function getCompanyPrefixLenth(string $gtinUpc): int
     {
-        $GCPFile = 'gcpprefixformatlist.xml';
+        $GCPFile = __DIR__ . '/resData/gcpprefixformatlist.xml';
         $xml = simplexml_load_file($GCPFile, "SimpleXMLElement", LIBXML_NOCDATA);
         // 使用XPath查找具有指定prefix属性的节点
         $nodes = $xml->xpath("//node()[@prefix='$gtinUpc']");
