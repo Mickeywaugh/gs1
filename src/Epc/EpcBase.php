@@ -147,10 +147,20 @@ abstract class EpcBase implements EpcInterface
         return $this;
     }
 
+    public function getItemReference(): string
+    {
+        return $this->itemReference;
+    }
+
     public function setSerial(string $_serial): static
     {
         $this->serial = $_serial;
         return $this;
+    }
+
+    public function getSerial(): string
+    {
+        return $this->serial;
     }
 
     /** 
@@ -180,6 +190,12 @@ abstract class EpcBase implements EpcInterface
         $this->filterValue = $_filterValue;
         return $this;
     }
+
+    public function getFilterValue(): int
+    {
+        return $this->filterValue;
+    }
+
 
     /** 
      * @param _schemeParameters set the length attribute of companyPrefixLength;

@@ -3,6 +3,7 @@
 namespace Mickeywaugh\Gs1;
 
 use Mickeywaugh\Gs1\Epc\Sgtin;
+use Mickeywaugh\Gs1\Epc\Gdti;
 
 class Gs1
 {
@@ -15,5 +16,10 @@ class Gs1
     public function Sgtin($arguments)
     {
         return new Sgtin($arguments);
+    }
+
+    public function Gdti($arguments)
+    {
+        return new Gdti($arguments);
     }
 }
