@@ -33,12 +33,12 @@ $schemeParameters = [
     'serial' => $serial
 ];
 
-$sgtinEpc = Gs1::Sgtin([
+$sgtinEpc = Gs1::Sgtin(
     $companyPrefixLength,
     $tagSize,
     $filterValue,
     $schemeParameters
-]);
+);
 
 $result = $sgtinEpc->encode();
 
@@ -72,12 +72,12 @@ $schemeParameters = [
     'serial' => $serial
 ];
 
-$sgtinEpc2 = Gs1::Sgtin([
+$sgtinEpc2 = Gs1::Sgtin(
     $companyPrefixLength,
     $tagSize,
     $filterValue,
     $schemeParameters
-]);
+);
 
 $result2 = $sgtinEpc2->encode();
 
@@ -110,11 +110,11 @@ foreach ($testCases as $case) {
         0,
         ['CI' => $case['CI'], 'serial' => '1']
     ]);
-    
+
     if ($sgtinTest->encode()) {
-        echo "   公司前缀长度 {$case['prefixLen']}: 公司前缀=" . 
-             $sgtinTest->getCompanyPrefix() . ", 项目参考=" . 
-             $sgtinTest->getItemReference() . "\n";
+        echo "   公司前缀长度 {$case['prefixLen']}: 公司前缀=" .
+            $sgtinTest->getCompanyPrefix() . ", 项目参考=" .
+            $sgtinTest->getItemReference() . "\n";
     }
 }
 
@@ -127,9 +127,9 @@ if ($result) {
     $epcHex = $sgtinEpc->getEpcHexaDecimal();
     echo "1. 从十六进制解码:\n";
     echo "   输入十六进制: {$epcHex}\n";
-    
+
     $decodedEpc = \Mickeywaugh\Gs1\Epc\Sgtin::decode($epcHex);
-    
+
     if ($decodedEpc) {
         echo "   ✓ 解码成功!\n";
         echo "   公司前缀长度: " . $decodedEpc->getCompanyPrefixLength() . "\n";
@@ -141,7 +141,7 @@ if ($result) {
         echo "   GTIN (CI): " . $decodedEpc->getCI() . "\n";
         echo "   EPC URI: " . $decodedEpc->getEpcUri() . "\n";
         echo "   EPC Tag URI: " . $decodedEpc->getEpcTagURI() . "\n";
-        
+
         // 验证编码和解码的一致性
         echo "\n   【验证】编码与解码一致性检查:\n";
         echo "   原始GTIN: {$CI}\n";

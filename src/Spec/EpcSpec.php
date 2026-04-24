@@ -170,7 +170,7 @@ class EpcSpec
     }
 
 
-    public static function isHexChars(string $string)
+    public static function isHexChars(string $string): bool
     {
         return self::matchRegex($string, self::$regHexChar);
     }
@@ -241,7 +241,7 @@ class EpcSpec
     }
 
     //string
-    public static function hex2symbol()
+    public static function hex2symbol(): array
     {
 
         $hexArr = [
@@ -336,7 +336,7 @@ class EpcSpec
      * @param string The source string to be transfer;
      * @return string The binary string;
      */
-    public static function encodingString($string)
+    public static function encodingString($string): string
     {
         $stringBin = '';
         $i = 0;
@@ -356,7 +356,7 @@ class EpcSpec
      * @param string The binary string to be transfer;
      * @return string The character string;
      */
-    public static function decodingString($binString)
+    public static function decodingString($binString): string
     {
         $retString = '';
         $len = strlen($binString);
@@ -375,7 +375,7 @@ class EpcSpec
      * @param fromBase Source number system;
      * @param toBase Target number system;
      */
-    public static function numberBaseConvert($number, $fromBase, $toBase)
+    public static function numberBaseConvert($number, $fromBase, $toBase): string
     {
         $number = strtolower($number);
         $digits = '0123456789abcdefghijklmnopqrstuvwxyz';

@@ -7,18 +7,31 @@ use Mickeywaugh\Gs1\Epc\Gdti;
 
 class Gs1
 {
-    public static function __callStatic(string $method, array $arguments)
+    public static function __callStatic(string $method, array $arguments): mixed
     {
-        $gs1 = new static();
-        return $gs1->{$method}(...$arguments);
+        return SELF::{$method}(...$arguments);
     }
 
-    public function Sgtin($arguments)
+    /**
+     * @param int companyPrefixLength
+     * @param int tagSize
+     * @param int filterValue
+     * @param array schemeParameters["CI"=>"","serial"]
+     * @return Sgtin
+     */
+    public static function Sgtin($arguments): Sgtin
     {
         return new Sgtin($arguments);
     }
 
-    public function Gdti($arguments)
+    /**
+     * @param int companyPrefixLength
+     * @param int tagSize
+     * @param int filterValue
+     * @param array schemeParameters["CI"=>"","serial"]
+     * @return Sgtin
+     */
+    public static function Gdti($arguments): Gdti
     {
         return new Gdti($arguments);
     }

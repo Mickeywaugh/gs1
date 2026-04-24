@@ -32,12 +32,12 @@ $schemeParameters = [
     'serial' => $serial
 ];
 
-$gdtiEpc = Gs1::Gdti([
+$gdtiEpc = Gs1::Gdti(
     $companyPrefixLength,
     $tagSize,
     $filterValue,
     $schemeParameters
-]);
+);
 
 $result = $gdtiEpc->encode();
 
@@ -70,12 +70,12 @@ $schemeParameters = [
     'serial' => $serial
 ];
 
-$gdtiEpc2 = Gs1::Gdti([
+$gdtiEpc2 = Gs1::Gdti(
     $companyPrefixLength,
     $tagSize,
     $filterValue,
     $schemeParameters
-]);
+);
 
 $result2 = $gdtiEpc2->encode();
 
