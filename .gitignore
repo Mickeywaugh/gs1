@@ -1,3 +1,27 @@
+# Composer
+/vendor/
 composer.lock
-vendor/
+
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Tests
+.phpunit.result.cache
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+cache/

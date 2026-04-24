@@ -6,9 +6,10 @@
  * SGTIN (Serialized Global Trade Item Number) 是GS1标准下用于标识贸易项目的EPC编码方案
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Mickeywaugh\Gs1\Gs1;
+use Mickeywaugh\Gs1\Epc\Sgtin;
 
 echo "========================================\n";
 echo "SGTIN EPC 编码解码示例\n";
@@ -28,21 +29,20 @@ $filterValue = 1;          // 过滤值 (0-7)，1表示POS零售商品
 $CI = "01234567890128";    // 14位GTIN
 $serial = "ABC123";        // 序列号
 
-$schemeParameters = [
-    'CI' => $CI,
-    'serial' => $serial
-];
-
-$sgtinEpc = Gs1::Sgtin(
-    $companyPrefixLength,
-    $tagSize,
-    $filterValue,
-    $schemeParameters
-);
+$sgtinEpc = Gs1::Sgtin([
+    'companyPrefixLength' => $companyPrefixLength,
+    'tagSize' => $tagSize,
+    'filterValue' => $filterValue,
+    'schemeParameters' => [
+        'CI' => $CI,
+        'serial' => $serial
+    ]
+]);
 
 $result = $sgtinEpc->encode();
 
 if ($result) {
+    echo "   ✓ 编码成功!\n";
     echo "   公司前缀长度: {$companyPrefixLength}\n";
     echo "   标签大小: {$tagSize} bits\n";
     echo "   过滤值: {$filterValue} (Point of Sale Trade Item)\n";
@@ -56,7 +56,7 @@ if ($result) {
     echo "   EPC 二进制: " . $sgtinEpc->getEpcBinary() . "\n";
     echo "   EPC 十六进制: " . $sgtinEpc->getEpcHexaDecimal() . "\n";
 } else {
-    echo "   编码失败: " . $sgtinEpc->getErrorMsg() . "\n";
+    echo "   ✗ 编码失败: " . $sgtinEpc->getErrorMsg() . "\n";
 }
 
 echo "\n";
@@ -67,21 +67,19 @@ $tagSize = 198;
 $filterValue = 6;  // 6表示单元负载
 $serial = "SERIAL-2024-001-XYZ";  // 更长的序列号
 
-$schemeParameters = [
-    'CI' => $CI,
-    'serial' => $serial
-];
-
-$sgtinEpc2 = Gs1::Sgtin(
-    $companyPrefixLength,
-    $tagSize,
-    $filterValue,
-    $schemeParameters
-);
+$sgtinEpc2 = Gs1::Sgtin(...[
+    'tagSize' => $tagSize,
+    'filterValue' => $filterValue,
+    'schemeParameters' => [
+        'CI' => $CI,
+        'serial' => $serial
+    ]
+])->setCompanyPrefixLength($companyPrefixLength);
 
 $result2 = $sgtinEpc2->encode();
 
 if ($result2) {
+    echo "   ✓ 编码成功!\n";
     echo "   标签大小: {$tagSize} bits\n";
     echo "   过滤值: {$filterValue} (Unit Load)\n";
     echo "   序列号: {$serial}\n";
@@ -89,7 +87,7 @@ if ($result2) {
     echo "   EPC Tag URI: " . $sgtinEpc2->getEpcTagURI() . "\n";
     echo "   EPC 十六进制: " . $sgtinEpc2->getEpcHexaDecimal() . "\n";
 } else {
-    echo "   编码失败: " . $sgtinEpc2->getErrorMsg() . "\n";
+    echo "   ✗ 编码失败: " . $sgtinEpc2->getErrorMsg() . "\n";
 }
 
 echo "\n";
@@ -104,17 +102,21 @@ $testCases = [
 ];
 
 foreach ($testCases as $case) {
-    $sgtinTest = Gs1::Sgtin([
-        $case['prefixLen'],
-        96,
-        0,
-        ['CI' => $case['CI'], 'serial' => '1']
-    ]);
+    $sgtinTest = Gs1::Sgtin(...[
+        'tagSize' => 96,
+        'filterValue' => 0,
+        'schemeParameters' => [
+            'CI' => $case['CI'],
+            'serial' => '1'
+        ]
+    ])->setCompanyPrefixLength($case['prefixLen']);
 
     if ($sgtinTest->encode()) {
-        echo "   公司前缀长度 {$case['prefixLen']}: 公司前缀=" .
+        echo "   ✓ 公司前缀长度 {$case['prefixLen']}: 公司前缀=" .
             $sgtinTest->getCompanyPrefix() . ", 项目参考=" .
             $sgtinTest->getItemReference() . "\n";
+    } else {
+        echo "   ✗ 公司前缀长度 {$case['prefixLen']}: " . $sgtinTest->getErrorMsg() . "\n";
     }
 }
 
@@ -128,7 +130,7 @@ if ($result) {
     echo "1. 从十六进制解码:\n";
     echo "   输入十六进制: {$epcHex}\n";
 
-    $decodedEpc = \Mickeywaugh\Gs1\Epc\Sgtin::decode($epcHex);
+    $decodedEpc = Sgtin::decode($epcHex);
 
     if ($decodedEpc) {
         echo "   ✓ 解码成功!\n";
@@ -148,7 +150,8 @@ if ($result) {
         echo "   解码GTIN: " . $decodedEpc->getCI() . "\n";
         echo "   原始序列号: {$serial}\n";
         echo "   解码序列号: " . $decodedEpc->getSerial() . "\n";
-        echo "   一致性: " . (($CI === $decodedEpc->getCI() && $serial === $decodedEpc->getSerial()) ? "✓ 通过" : "✗ 失败") . "\n";
+        $isConsistent = ($CI === $decodedEpc->getCI() && $serial === $decodedEpc->getSerial());
+        echo "   一致性: " . ($isConsistent ? "✓ 通过" : "✗ 失败") . "\n";
     } else {
         echo "   ✗ 解码失败!\n";
     }
@@ -161,7 +164,7 @@ echo "2. 从已知十六进制解码:\n";
 $testHex = "3074257BF7194E7340000000";  // 示例十六进制
 echo "   输入十六进制: {$testHex}\n";
 
-$decodedEpc2 = \Mickeywaugh\Gs1\Epc\Sgtin::decode($testHex);
+$decodedEpc2 = Sgtin::decode($testHex);
 
 if ($decodedEpc2) {
     echo "   ✓ 解码成功!\n";
@@ -183,11 +186,11 @@ $testGTINs = [
     "1234567890123"   // 另一个测试用例
 ];
 
+$sgtinTemp = new Sgtin();
 foreach ($testGTINs as $gtin) {
     if (strlen($gtin) == 13) {
         // 计算校验位
-        $sgtinTemp = new \Mickeywaugh\Gs1\Epc\Sgtin();
-        $checkDigit = $sgtinTemp->getCheckDigit($gtin . "0");  // 临时添加0占位
+        $checkDigit = $sgtinTemp->getCheckDigit($gtin);
         echo "   GTIN-13: {$gtin} -> 校验位: {$checkDigit} -> 完整GTIN: {$gtin}{$checkDigit}\n";
     } else {
         echo "   GTIN-14: {$gtin} (已包含校验位)\n";
@@ -198,7 +201,7 @@ echo "\n";
 
 // 示例4: 获取参数选项
 echo "4. SGTIN 参数选项:\n";
-$sgtinInfo = new \Mickeywaugh\Gs1\Epc\Sgtin();
+$sgtinInfo = new Sgtin();
 
 echo "   支持的公司前缀长度: " . implode(", ", $sgtinInfo->getCompanyPrefixLengthOptions()) . "\n";
 echo "   支持的标签大小:\n";
@@ -216,27 +219,61 @@ echo "\n";
 echo "5. 错误处理演示:\n";
 
 // 测试错误的公司前缀长度
-$badSgtin = Gs1::Sgtin([
-    15,  // 无效的公司前缀长度（应该是6-12）
-    96,
-    0,
-    ['CI' => '01234567890128', 'serial' => '1']
-]);
+$badSgtin = Gs1::Sgtin(...[
+    'tagSize' => 96,
+    'filterValue' => 0,
+    'schemeParameters' => [
+        'CI' => '01234567890128',
+        'serial' => '1'
+    ]
+])->setCompanyPrefixLength(15);  // 无效的公司前缀长度
 
 if (!$badSgtin->encode()) {
     echo "   ✓ 正确捕获错误: " . $badSgtin->getErrorMsg() . "\n";
 }
 
 // 测试缺失参数
-$badSgtin2 = Gs1::Sgtin([
-    7,
-    96,
-    0,
-    ['CI' => '01234567890128']  // 缺少 serial 参数
-]);
+$badSgtin2 = Gs1::Sgtin(...[
+    'tagSize' => 96,
+    'filterValue' => 0,
+    'schemeParameters' => [
+        'CI' => '01234567890128'  // 缺少 serial 参数
+    ]
+])->setCompanyPrefixLength(7);
 
 if (!$badSgtin2->encode()) {
     echo "   ✓ 正确捕获错误: " . $badSgtin2->getErrorMsg() . "\n";
+}
+
+// 测试无效的GTIN格式
+$badSgtin3 = Gs1::Sgtin(...[
+    'tagSize' => 96,
+    'filterValue' => 0,
+    'schemeParameters' => [
+        'CI' => 'INVALID',  // 无效的GTIN
+        'serial' => '123'
+    ]
+])->setCompanyPrefixLength(7);
+
+if (!$badSgtin3->encode()) {
+    echo "   ✓ 正确捕获错误: " . $badSgtin3->getErrorMsg() . "\n";
+}
+
+echo "\n";
+
+// 示例6: 获取完整输出
+echo "6. 获取完整输出数据:\n";
+if ($result) {
+    $output = $sgtinEpc->getOutput();
+    echo "   输出数据结构:\n";
+    echo "   - scheme: " . $output['scheme']['name'] . "\n";
+    echo "   - tagSize: " . $output['tagSize'] . "\n";
+    echo "   - filterValue: " . $output['filterValue'] . "\n";
+    echo "   - companyPrefix: " . $output['companyPrefix'] . "\n";
+    echo "   - serial: " . $output['serial'] . "\n";
+    echo "   - epcURI: " . $output['epcURI'] . "\n";
+    echo "   - epcHexaDecimal: " . $output['epcHexaDecimal'] . "\n";
+    echo "   - hasError: " . ($output['error']['code'] ? 'Yes' : 'No') . "\n";
 }
 
 echo "\n========================================\n";

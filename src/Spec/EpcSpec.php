@@ -490,12 +490,36 @@ class EpcSpec
      * @param string $gtinUpc The GTIN/UPC value;
      * @return int The company prefix length;
      */
-    public static function getCompanyPrefixLenth(string $gtinUpc): int
+    public static function getCompanyPrefixLength(string $gtinUpc): int
     {
-        $GCPFile = __DIR__ . '/resData/gcpprefixformatlist.xml';
-        $xml = simplexml_load_file($GCPFile, "SimpleXMLElement", LIBXML_NOCDATA);
-        // 使用XPath查找具有指定prefix属性的节点
-        $nodes = $xml->xpath("//node()[@prefix='$gtinUpc']");
-        return empty($nodes) ? 0 : (int)$nodes[0]->attributes()->gcpLength;
+        // 使用静态缓存避免重复加载XML文件
+        static $xmlCache = null;
+        static $prefixMap = null;
+
+        if ($prefixMap === null) {
+            $GCPFile = __DIR__ . '/resData/gcpprefixformatlist.xml';
+
+            if (!is_file($GCPFile)) {
+                return 0;
+            }
+
+            // 首次加载时解析XML并构建映射表
+            if ($xmlCache === null) {
+                $xmlCache = simplexml_load_file($GCPFile, "SimpleXMLElement", LIBXML_NOCDATA);
+            }
+
+            // 构建前缀到长度的映射表以提高查询性能
+            $prefixMap = [];
+            foreach ($xmlCache->xpath("//node()") as $node) {
+                $prefix = (string)$node->attributes()->prefix;
+                $gcpLength = (int)$node->attributes()->gcpLength;
+                if (!empty($prefix)) {
+                    $prefixMap[$prefix] = $gcpLength;
+                }
+            }
+        }
+
+        // 从映射表中查找公司前缀长度
+        return $prefixMap[$gtinUpc] ?? 0;
     }
 }

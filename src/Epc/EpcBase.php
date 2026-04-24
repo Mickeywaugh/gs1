@@ -2,45 +2,59 @@
 
 namespace Mickeywaugh\Gs1\Epc;
 
-use Mickeywaugh\Gs1\Epc\EpcInterface;
 use Mickeywaugh\Gs1\Epc\EpcMesg;
 use Mickeywaugh\Gs1\Spec\EpcSpec;
 
 /**
- * Description:
- * EPC base class for all supported EPC schemes 
- * According to specification Gs1 EPC Tag Data Standard Release 1.13 
- * Author: Mickey Wu <Mickey dot Wu at boingtech dot com>
+ * EPC基类 - 所有EPC编码方案的抽象基类
+ * 
+ * 根据GS1 EPC标签数据标准版本1.13实现
+ * 提供通用的EPC编码解码功能和属性管理
+ * 
+ * @package Mickeywaugh\Gs1\Epc
+ * @author Mickey Wu <mickey.wu@boingtech.com>
+ * @license MIT
+ * @abstract
  */
-
-abstract class EpcBase implements EpcInterface
+abstract class EpcBase
 {
-    protected $uriPrefix = 'urn:epc:id';
-    protected $tagPrefix = 'urn:epc:tag';
-    protected $rawPrefix = "urn:epc:raw";
+    /** URI前缀常量 */
+    protected const URI_PREFIX = 'urn:epc:id';
+    protected const TAG_PREFIX = 'urn:epc:tag';
+    protected const RAW_PREFIX = 'urn:epc:raw';
 
-    #support EPC Tag data translation schemes;
-    const SupportSchemes = ["Gs1" => [
-        "sgtin" => "GTIN with serial",
-        "sscc" => "SSCC",
-        "sgln" => "GLN with extension",
-        "grai" => "GRAI with serial",
-        "giai" => "GIAI",
-        "gsrn" => "GSRN",
-        "gsrnp" => "GSRN-P",
-        "gdti" => "GDTI with serial",
-        "cpi" => "CPI, serial",
-        "sgcn" => "GCN with serial",
-        "itip" => "ITIP with piece and total, serial"
-    ], "Others" => [
-        "gid" => "GID",
-        "usdod" => "USDoD",
-        "adi" => "ADI"
-    ]];
+    /** 支持的EPC方案 */
+    public const SUPPORTED_SCHEMES = [
+        "Gs1" => [
+            "sgtin" => "GTIN with serial",
+            "sscc" => "SSCC",
+            "sgln" => "GLN with extension",
+            "grai" => "GRAI with serial",
+            "giai" => "GIAI",
+            "gsrn" => "GSRN",
+            "gsrnp" => "GSRN-P",
+            "gdti" => "GDTI with serial",
+            "cpi" => "CPI, serial",
+            "sgcn" => "GCN with serial",
+            "itip" => "ITIP with piece and total, serial"
+        ],
+        "Others" => [
+            "gid" => "GID",
+            "usdod" => "USDoD",
+            "adi" => "ADI"
+        ]
+    ];
 
-    // EPC parameter options
-    protected $companyPrefixLengthOptions = [6, 7, 8, 9, 10, 11, 12];
-    protected $tagSizeOptions = [
+    // ==================== 实例属性 ====================
+
+    /** URI前缀 */
+    protected string $uriPrefix = self::URI_PREFIX;
+    protected string $tagPrefix = self::TAG_PREFIX;
+    protected string $rawPrefix = self::RAW_PREFIX;
+
+    /** EPC参数选项 */
+    protected array $companyPrefixLengthOptions = [6, 7, 8, 9, 10, 11, 12];
+    protected array $tagSizeOptions = [
         96 => "96 bits",
         110 => "110 bits",
         113 => "113 bits",
@@ -52,7 +66,7 @@ abstract class EpcBase implements EpcInterface
         212 => "212 bits",
         "var" => "Variable"
     ];
-    protected $filterValueOptions = [
+    protected array $filterValueOptions = [
         0 => "All Others",
         1 => "Reserved",
         2 => "Reserved",
@@ -63,312 +77,632 @@ abstract class EpcBase implements EpcInterface
         7 => "Reserved"
     ];
 
-    // EPC parameters
-    protected $scheme;
-    protected $encodeScheme;
-    protected $schemeParameters = [];
-    protected $companyPrefixLength = 0, $tagSize = 0, $filterValue = 0;
-    protected $companyPrefix = "";
-    protected $itemReference = ""; //indicator or item reference
-    protected $serial = "";
+    /** EPC方案相关属性 */
+    protected ?string $scheme = null;
+    protected ?string $encodeScheme = null;
+    protected array $schemeParameters = [];
 
-    // EPC instance properties, $epcURI means EPC Pure Identify URI;
-    protected $epcURI = "", $epcTagURI = "", $epcRawURI = "", $epcBinary = "", $epcHexaDecimal = "", $errorCode = null, $errorMsg = null;
+    /** EPC参数值 */
+    protected int $companyPrefixLength = 0;
+    protected int $tagSize = 0;
+    protected int $filterValue = 0;
 
-    protected $headerStruct = [];
+    /** EPC数据字段 */
+    protected string $companyPrefix = "";
+    protected string $itemReference = "";
+    protected string $CI = "";
+    protected string $serial = "";
 
+    /** EPC输出结果 */
+    protected string $epcURI = "";
+    protected string $epcTagURI = "";
+    protected string $epcRawURI = "";
+    protected string $epcBinary = "";
+    protected string $epcHexaDecimal = "";
+
+    /** 错误信息 */
+    protected ?int $errorCode = null;
+    protected ?string $errorMsg = null;
+
+    /** 头部结构信息 */
+    protected array $headerStruct = [];
+
+    // ==================== 错误处理方法 ====================
+
+    /**
+     * 设置错误信息
+     * 
+     * @param int $errorCode 错误代码
+     * @param mixed ...$parameters 错误消息参数
+     * @return null 始终返回null表示失败
+     */
     public function setError(int $_errorCode, ...$parameters): null
     {
         $this->errorCode = $_errorCode;
-        $this->errorMsg = EpcMesg::getMessage($_errorCode, $parameters);
+        $this->errorMsg = EpcMesg::getMessage($_errorCode, ...$parameters);
         return null;
     }
 
+    /**
+     * 获取错误消息
+     * 
+     * @return string|null 错误消息，无错误时返回null
+     */
     public function getErrorMsg(): ?string
     {
         return $this->errorMsg;
     }
 
-    /** 
-     * @param _scheme set the current EPC class entity scheme;
-     * @return this Epc class entity with valide scheme;
+    /**
+     * 获取错误代码
+     * 
+     * @return int|null 错误代码，无错误时返回null
      */
-    public function setScheme(?string $_scheme = ""): ?static
+    public function getErrorCode(): ?int
     {
-        if (!$_scheme) {
+        return $this->errorCode;
+    }
+
+    /**
+     * 检查是否有错误
+     * 
+     * @return bool 有错误时返回true
+     */
+    public function hasError(): bool
+    {
+        return $this->errorCode !== null;
+    }
+
+    // ==================== 方案相关方法 ====================
+
+    /**
+     * 设置EPC方案
+     * 
+     * @param string|null $scheme 方案名称，为空时从headerStruct中获取
+     * @return static|null 成功时返回自身，失败时返回null
+     */
+    public function setScheme(?string $scheme = ""): ?static
+    {
+        if (empty($scheme)) {
             if (isset($this->headerStruct['scheme'])) {
-                $_scheme = $this->headerStruct['scheme'];
+                $scheme = $this->headerStruct['scheme'];
             } else {
-                return $this->setError(EpcMesg::PARAM_MISSING, $_scheme);
-            };
+                return $this->setError(EpcMesg::PARAM_MISSING, 'scheme');
+            }
         }
-        if (!is_string($_scheme)) {
-            return $this->setError(EpcMesg::PARAM_TYPE_ERROR, $_scheme);
+
+        if (!is_string($scheme)) {
+            return $this->setError(EpcMesg::PARAM_TYPE_ERROR, 'scheme');
         }
-        if (!key_exists($_scheme, array_merge(self::SupportSchemes["Gs1"], self::SupportSchemes["Others"]))) {
-            return $this->setError(EpcMesg::EPC_SCHEMA_UNSUPPORT, $_scheme);
+
+        $normalizedScheme = strtolower($scheme);
+        $allSchemes = array_merge(
+            array_keys(self::SUPPORTED_SCHEMES["Gs1"]),
+            array_keys(self::SUPPORTED_SCHEMES["Others"])
+        );
+
+        if (!in_array($normalizedScheme, $allSchemes)) {
+            return $this->setError(EpcMesg::EPC_SCHEMA_UNSUPPORT, $scheme);
         }
-        $this->scheme = strtolower($_scheme);
+
+        $this->scheme = $normalizedScheme;
         return $this;
     }
 
-    public function getScheme(): string
+    /**
+     * 获取当前方案
+     * 
+     * @return string|null 方案名称
+     */
+    public function getScheme(): ?string
     {
         return $this->scheme;
     }
 
-    public function getTagSize(): int
-    {
-        return $this->tagSize;
-    }
-
-    /** 
-     * @param _companyPrefixLength set the length attribute of companyPrefixLength;
-     * @return this Epc class entity with valide company prefix lenth value;
+    /**
+     * 设置编码方案（方案-标签大小组合）
+     * 
+     * @return static 返回自身以支持链式调用
      */
-    public function setCompanyPrefixLength($_companyPrefixLength): ?static
-    {
-        // //check the input company prefix lenth value is among the allowed options
-        if (!in_array($_companyPrefixLength, $this->getCompanyPrefixLengthOptions())) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Company prefix length");
-        }
-        $this->companyPrefixLength = $_companyPrefixLength;
-        return $this;
-    }
-
-    public function getCompanyPrefixLength(): int
-    {
-        return $this->companyPrefixLength;
-    }
-
-    public function setItemReference(string $_itemReference): static
-    {
-        $this->itemReference = $_itemReference;
-        return $this;
-    }
-
-    public function getItemReference(): string
-    {
-        return $this->itemReference;
-    }
-
-    public function setSerial(string $_serial): static
-    {
-        $this->serial = $_serial;
-        return $this;
-    }
-
-    public function getSerial(): string
-    {
-        return $this->serial;
-    }
-
-    /** 
-     * @param _tagSize value of the tag size;
-     * @return this Epc class entity with valide tig size; 
-     */
-    public function setTagSize($_tagSize): ?static
-    {
-        // //check the tag size value is among the allowed options
-        if (!array_key_exists($_tagSize, $this->getTagSizeOptions())) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Tag size");
-        }
-        $this->tagSize = $_tagSize;
-        return $this;
-    }
-
-    /** 
-     * @param length set the length attribute of companyPrefixLength;
-     * @return this Epc class entity with valide filter value; 
-     */
-    public function setFilterValue($_filterValue): ?static
-    {
-        // //check the filter value is among the allowed options
-        if (!array_key_exists($_filterValue, $this->getFilterValueOptions())) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Filter value");
-        }
-        $this->filterValue = $_filterValue;
-        return $this;
-    }
-
-    public function getFilterValue(): int
-    {
-        return $this->filterValue;
-    }
-
-
-    /** 
-     * @param _schemeParameters set the length attribute of companyPrefixLength;
-     * @return this Epc class entity with valide filter value;
-     * @throws null;
-     */
-    public function setSchemeParameters($_schemeParameters): ?static
-    {
-        if (empty($_schemeParameters)) {
-            return $this->setError("At least 1 scheme parameters needed!");
-        } else {
-            foreach ($_schemeParameters as $k => $parameter) {
-                if (empty($parameter)) {
-                    return $this->setError("Parameter with index $k can not be empty!");
-                }
-            }
-        }
-        $this->schemeParameters = $_schemeParameters;
-        return $this;
-    }
-
     public function setEncodeScheme(): static
     {
         $this->encodeScheme = $this->scheme . "-" . $this->tagSize;
         return $this;
     }
 
-    public function setEpcHexaDecimal(string $epcHexaDecimal): ?static
-    {
-        if (empty($epcHex)) return $this->setError(EpcMesg::PARAM_SHOULD_NOT_EMPTY, "epcHex");
-        if (!EpcSpec::isHexChars($epcHex)) {
-            return $this->setError(EpcMesg::EPC_HEX_FORMAT_ERROR);
-        }
-        $this->epcHexaDecimal = $epcHexaDecimal;
-        return $this;
-    }
-
-    public function getEpcHexaDecimal(): string
-    {
-        return $this->epcHexaDecimal;
-    }
-
-    public function setEpcBinary(string $epcBinString): static
-    {
-        $this->epcBinary = $epcBinString;
-        return $this;
-    }
-
-    public function getEpcBinary(): string
-    {
-        return $this->epcBinary;
-    }
-
-    // Encode all URIs if required fields are conformed
     /**
-     * @return self|null;
+     * 获取编码方案
+     * 
+     * @return string|null 编码方案名称
      */
-    public function encode(): ?static
+    public function getEncodeScheme(): ?string
     {
+        return $this->encodeScheme;
+    }
+
+    // ==================== 公司前缀相关方法 ====================
+
+    /**
+     * 设置公司前缀长度
+     * 
+     * @param int|null $companyPrefixLength 公司前缀长度，为空时从CI自动计算
+     * @return static|null 成功时返回自身，失败时返回null
+     */
+    public function setCompanyPrefixLength(?int $_companyPrefixLength = null): ?static
+    {
+        $length = $_companyPrefixLength ?? EpcSpec::getCompanyPrefixLength($this->CI);
+
+        if (!in_array($length, $this->getCompanyPrefixLengthOptions())) {
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Company prefix length");
+        }
+
+        $this->companyPrefixLength = $length;
         return $this;
     }
 
-    public static function decode(string $epcHexString): ?self
-    {
-        $instance = new self();
-        return $instance->setEpcHexaDecimal($epcHexString);
-    }
-
-    /** 
-     * @param _companyPrefix set the company prefix value;
-     * @return this Epc class entity with valide company prefix value; 
+    /**
+     * 获取公司前缀长度
+     * 
+     * @return int 公司前缀长度
      */
-    public function setCompanyPrefix($_companyPrefix): static
+    public function getCompanyPrefixLength(): int
     {
-        $this->companyPrefix = $_companyPrefix;
-        return $this;
+        return $this->companyPrefixLength;
     }
 
-    public function getCompanyPrefix(): string
-    {
-        return $this->companyPrefix;
-    }
-    // Get Company prefix length options 6~12 digits
+    /**
+     * 获取支持的公司前缀长度选项
+     * 
+     * @return array 公司前缀长度数组
+     */
     public function getCompanyPrefixLengthOptions(): array
     {
         return $this->companyPrefixLengthOptions;
     }
 
-    // Get Filter values options for current EPC scheme
-    public function getFilterValueOptions(): array
+    /**
+     * 设置公司前缀
+     * 
+     * @param string $companyPrefix 公司前缀字符串
+     * @return static 返回自身以支持链式调用
+     */
+    public function setCompanyPrefix(string $companyPrefix): static
     {
-        return $this->filterValueOptions;
+        $this->companyPrefix = $companyPrefix;
+        return $this;
     }
 
-    // Get Tag size options for web of current EPC scheme
+    /**
+     * 获取公司前缀
+     * 
+     * @return string 公司前缀字符串
+     */
+    public function getCompanyPrefix(): string
+    {
+        return $this->companyPrefix;
+    }
+
+    // ==================== CI (Control Indicator) 相关方法 ====================
+
+    /**
+     * 设置CI（控制指示符）
+     * 
+     * @param string $CI CI值
+     * @return static 返回自身以支持链式调用
+     */
+    public function setCI(string $CI): static
+    {
+        $this->CI = $CI;
+        $this->setCompanyPrefixLength();
+        return $this;
+    }
+
+    /**
+     * 获取CI
+     * 
+     * @return string CI值
+     */
+    public function getCI(): string
+    {
+        return $this->CI;
+    }
+
+    // ==================== 项目参考相关方法 ====================
+
+    /**
+     * 设置项目参考
+     * 
+     * @param string $itemReference 项目参考字符串
+     * @return static 返回自身以支持链式调用
+     */
+    public function setItemReference(string $itemReference): static
+    {
+        $this->itemReference = $itemReference;
+        return $this;
+    }
+
+    /**
+     * 获取项目参考
+     * 
+     * @return string 项目参考字符串
+     */
+    public function getItemReference(): string
+    {
+        return $this->itemReference;
+    }
+
+    // ==================== 序列号相关方法 ====================
+
+    /**
+     * 设置序列号
+     * 
+     * @param string $serial 序列号字符串
+     * @return static 返回自身以支持链式调用
+     */
+    public function setSerial(string $serial): static
+    {
+        $this->serial = $serial;
+        return $this;
+    }
+
+    /**
+     * 获取序列号
+     * 
+     * @return string 序列号字符串
+     */
+    public function getSerial(): string
+    {
+        return $this->serial;
+    }
+
+    // ==================== 标签大小相关方法 ====================
+
+    /**
+     * 设置标签大小
+     * 
+     * @param int $tagSize 标签大小（位数）
+     * @return static|null 成功时返回自身，失败时返回null
+     */
+    public function setTagSize(int $tagSize): ?static
+    {
+        if (!array_key_exists($tagSize, $this->getTagSizeOptions())) {
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Tag size");
+        }
+
+        $this->tagSize = $tagSize;
+        return $this;
+    }
+
+    /**
+     * 获取标签大小
+     * 
+     * @return int 标签大小（位数）
+     */
+    public function getTagSize(): int
+    {
+        return $this->tagSize;
+    }
+
+    /**
+     * 获取支持的标签大小选项
+     * 
+     * @return array 标签大小选项数组
+     */
     public function getTagSizeOptions(): array
     {
         return $this->tagSizeOptions;
     }
 
-    public function setEpcURI(string $epcUri): static
+    // ==================== 过滤值相关方法 ====================
+
+    /**
+     * 设置过滤值
+     * 
+     * @param int $filterValue 过滤值
+     * @return static|null 成功时返回自身，失败时返回null
+     */
+    public function setFilterValue(int $filterValue): ?static
     {
-        $this->epcURI = $epcUri;
+        if (!array_key_exists($filterValue, $this->getFilterValueOptions())) {
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Filter value");
+        }
+
+        $this->filterValue = $filterValue;
         return $this;
     }
+
+    /**
+     * 获取过滤值
+     * 
+     * @return int 过滤值
+     */
+    public function getFilterValue(): int
+    {
+        return $this->filterValue;
+    }
+
+    /**
+     * 获取支持的过滤值选项
+     * 
+     * @return array 过滤值选项数组
+     */
+    public function getFilterValueOptions(): array
+    {
+        return $this->filterValueOptions;
+    }
+
+    // ==================== 方案参数相关方法 ====================
+
+    /**
+     * 设置方案参数
+     * 
+     * @param array $schemeParameters 方案参数字典
+     * @return static|null 成功时返回自身，失败时返回null
+     */
+    public function setSchemeParameters(array $schemeParameters): ?static
+    {
+        if (empty($schemeParameters)) {
+            return $this->setError(EpcMesg::EPC_OPTION_MISSING, 'scheme parameters');
+        }
+
+        foreach ($schemeParameters as $key => $parameter) {
+            if (empty($parameter) && $parameter !== 0 && $parameter !== '0') {
+                return $this->setError(EpcMesg::EPC_OPTION_SHOULD_NOT_EMPTY, $key);
+            }
+        }
+
+        $this->schemeParameters = $schemeParameters;
+        return $this;
+    }
+
+    /**
+     * 获取方案参数
+     * 
+     * @return array 方案参数字典
+     */
+    public function getSchemeParameters(): array
+    {
+        return $this->schemeParameters;
+    }
+
+    // ==================== EPC输出相关方法 ====================
+
+    /**
+     * 设置EPC十六进制值
+     * 
+     * @param string $epcHexaDecimal 十六进制字符串
+     * @return static|null 成功时返回自身，失败时返回null
+     */
+    public function setEpcHexaDecimal(string $epcHexaDecimal): ?static
+    {
+        if (empty($epcHexaDecimal)) {
+            return $this->setError(EpcMesg::PARAM_SHOULD_NOT_EMPTY, "epcHexaDecimal");
+        }
+
+        if (!EpcSpec::isHexChars($epcHexaDecimal)) {
+            return $this->setError(EpcMesg::EPC_HEX_FORMAT_ERROR);
+        }
+
+        $this->epcHexaDecimal = strtoupper($epcHexaDecimal);
+        return $this;
+    }
+
+    /**
+     * 获取EPC十六进制值
+     * 
+     * @return string 十六进制字符串
+     */
+    public function getEpcHexaDecimal(): string
+    {
+        return $this->epcHexaDecimal;
+    }
+
+    /**
+     * 设置EPC二进制值
+     * 
+     * @param string $epcBinary 二进制字符串
+     * @return static 返回自身以支持链式调用
+     */
+    public function setEpcBinary(string $epcBinary): static
+    {
+        $this->epcBinary = $epcBinary;
+        return $this;
+    }
+
+    /**
+     * 获取EPC二进制值
+     * 
+     * @return string 二进制字符串
+     */
+    public function getEpcBinary(): string
+    {
+        return $this->epcBinary;
+    }
+
+    /**
+     * 设置EPC URI
+     * 
+     * @param string $epcURI EPC URI字符串
+     * @return static 返回自身以支持链式调用
+     */
+    public function setEpcURI(string $epcURI): static
+    {
+        $this->epcURI = $epcURI;
+        return $this;
+    }
+
+    /**
+     * 获取EPC URI
+     * 
+     * @return string EPC URI字符串
+     */
     public function getEpcUri(): string
     {
         return $this->epcURI;
     }
 
+    /**
+     * 设置EPC Tag URI
+     * 
+     * @param string $epcTagURI EPC Tag URI字符串
+     * @return static 返回自身以支持链式调用
+     */
     public function setEpcTagURI(string $epcTagURI): static
     {
         $this->epcTagURI = $epcTagURI;
         return $this;
     }
 
+    /**
+     * 获取EPC Tag URI
+     * 
+     * @return string EPC Tag URI字符串
+     */
     public function getEpcTagURI(): string
     {
         return $this->epcTagURI;
     }
 
+    /**
+     * 设置EPC Raw URI
+     * 
+     * @param string $epcRawURI EPC Raw URI字符串
+     * @return static 返回自身以支持链式调用
+     */
     public function setEpcRawURI(string $epcRawURI): static
     {
         $this->epcRawURI = $epcRawURI;
         return $this;
     }
 
+    /**
+     * 获取EPC Raw URI
+     * 
+     * @return string EPC Raw URI字符串
+     */
     public function getEpcRawURI(): string
     {
         return $this->epcRawURI;
     }
 
-    public function getOutput(): array
-    {
-        return [
-            "scheme" => ["name" => $this->scheme, "parameters" => $this->schemeParameters],
-            "tagSize" => $this->tagSize,
-            "filterValue" => $this->filterValue,
-            "companyPrefixLength" => $this->companyPrefixLength,
-            "companyPrefix" => $this->companyPrefix,
-            "epcURI" => $this->epcURI,
-            "epcTagURI" => $this->epcTagURI,
-            "epcHexaDecimal" => $this->epcHexaDecimal,
-            "epcBinary" => $this->epcBinary,
-            "epcRawURI" => $this->epcRawURI
-        ];
-    }
+    // ==================== 头部结构相关方法 ====================
 
-
-    /** 以下为标准库操作函数区 */
-
+    /**
+     * 设置头部结构
+     * 
+     * @param string $headerValue 头部十六进制值
+     * @return static|null 成功时返回自身，失败时返回null
+     */
     public function setHeaderStruct(string $headerValue): ?static
     {
-        if (empty($headerValue)) return null;
+        if (empty($headerValue)) {
+            return null;
+        }
+
         $this->headerStruct = EpcSpec::getHeaderValues($headerValue);
         return $this;
     }
 
+    /**
+     * 获取头部结构
+     * 
+     * @return array 头部结构数组
+     */
     public function getHeaderStruct(): array
     {
         return $this->headerStruct;
     }
 
+    // ==================== EPC标准配置相关方法 ====================
+
     /**
-     * @param $nodeName Node name;
-     * @return Array;
+     * 获取EPC标准配置
+     * 
+     * @param string $nodeName 节点名称（BINARY、PURE_IDENTITY等）
+     * @return array 标准配置数组
      */
     public function getEpcStandard(string $nodeName): array
     {
-        if (empty($nodeName)) return [];
+        if (empty($nodeName) || empty($this->scheme) || $this->tagSize === 0) {
+            return [];
+        }
+
         $nodeName = strtoupper($nodeName);
-        $standArr = EpcSpec::getDataStandard($this->scheme . '-' . $this->tagSize);
-        if (!key_exists($nodeName, $standArr)) return [];
-        return $standArr[$nodeName];
+        return EpcSpec::getDataStandard($this->scheme . '-' . $this->tagSize)[$nodeName] ?? [];
+    }
+
+    // ==================== 编码解码方法（子类实现）====================
+
+    /**
+     * 编码EPC数据
+     * 
+     * 此方法应在子类中实现具体的编码逻辑
+     * 
+     * @return static|null 成功时返回自身，失败时返回null
+     * @abstract
+     */
+    abstract public function encode(): ?static;
+
+    /**
+     * 解码EPC数据
+     * 
+     * 此方法应在子类中实现具体的解码逻辑
+     * 
+     * @param string $epcHexString EPC十六进制字符串
+     * @return static|null 成功时返回实例，失败时返回null
+     */
+    abstract public static function decode(string $epcHexString): ?static;
+
+    // ==================== 工具方法 ====================
+
+    /**
+     * 获取校验位（不同方案有不同的实现）
+     * 
+     * @param string $number 需要计算校验位的数字字符串
+     * @return string 校验位字符
+     * @abstract
+     */
+    abstract public function getCheckDigit(string $number): string;
+
+    /**
+     * 获取输出数据数组
+     * 
+     * @return array 包含所有EPC相关数据的关联数组
+     */
+    public function getOutput(): array
+    {
+        return [
+            "scheme" => [
+                "name" => $this->scheme,
+                "parameters" => $this->schemeParameters
+            ],
+            "tagSize" => $this->tagSize,
+            "filterValue" => $this->filterValue,
+            "companyPrefixLength" => $this->companyPrefixLength,
+            "companyPrefix" => $this->companyPrefix,
+            "itemReference" => $this->itemReference,
+            "serial" => $this->serial,
+            "CI" => $this->CI,
+            "epcURI" => $this->epcURI,
+            "epcTagURI" => $this->epcTagURI,
+            "epcRawURI" => $this->epcRawURI,
+            "epcBinary" => $this->epcBinary,
+            "epcHexaDecimal" => $this->epcHexaDecimal,
+            "error" => [
+                "code" => $this->errorCode,
+                "message" => $this->errorMsg
+            ]
+        ];
+    }
+
+    /**
+     * 转换为字符串表示
+     * 
+     * @return string 格式化的EPC信息字符串
+     */
+    public function __toString(): string
+    {
+        $output = $this->getOutput();
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }
