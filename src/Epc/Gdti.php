@@ -32,12 +32,9 @@ class Gdti extends EpcBase
         int $filterValue = 1
     ) {
         $this->setScheme("GDTI")
+            ->setSchemeParameters($schemeParameters)
             ->setTagSize($tagSize)
             ->setFilterValue($filterValue);
-
-        if (!empty($schemeParameters['CI']) && !empty($schemeParameters['serial'])) {
-            $this->setSchemeParameters($schemeParameters);
-        }
     }
 
     /**
