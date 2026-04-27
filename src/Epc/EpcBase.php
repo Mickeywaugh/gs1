@@ -228,9 +228,9 @@ abstract class EpcBase
      * @param int|null $companyPrefixLength 公司前缀长度，为空时从CI自动计算
      * @return static|null 成功时返回自身，失败时返回null
      */
-    public function setCompanyPrefixLength(?int $_companyPrefixLength = null): ?static
+    public function setCompanyPrefixLength(?int $_companyPrefixLength = 7): ?static
     {
-        $length = $_companyPrefixLength ?? EpcSpec::getCompanyPrefixLength($this->CI);
+        $length = EpcSpec::getCompanyPrefixLength($this->CI) ?? $_companyPrefixLength;
 
         if (!in_array($length, $this->getCompanyPrefixLengthOptions())) {
             return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Company prefix length");
