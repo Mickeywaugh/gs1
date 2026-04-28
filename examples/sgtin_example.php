@@ -6,7 +6,7 @@
  * SGTIN (Serialized Global Trade Item Number) 是GS1标准下用于标识贸易项目的EPC编码方案
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once str_replace('mickeywaugh/gs1/examples', '', __DIR__) . 'autoload.php';
 
 use Mickeywaugh\Gs1\Gs1;
 use Mickeywaugh\Gs1\Epc\Sgtin;
@@ -30,7 +30,6 @@ $CI = "01234567890128";    // 14位GTIN
 $serial = "ABC123";        // 序列号
 
 $sgtinEpc = Gs1::Sgtin([
-    'companyPrefixLength' => $companyPrefixLength,
     'tagSize' => $tagSize,
     'filterValue' => $filterValue,
     'schemeParameters' => [
@@ -67,7 +66,7 @@ $tagSize = 198;
 $filterValue = 6;  // 6表示单元负载
 $serial = "SERIAL-2024-001-XYZ";  // 更长的序列号
 
-$sgtinEpc2 = Gs1::Sgtin(...[
+$sgtinEpc2 = Gs1::Sgtin([
     'tagSize' => $tagSize,
     'filterValue' => $filterValue,
     'schemeParameters' => [
@@ -102,7 +101,7 @@ $testCases = [
 ];
 
 foreach ($testCases as $case) {
-    $sgtinTest = Gs1::Sgtin(...[
+    $sgtinTest = Gs1::Sgtin([
         'tagSize' => 96,
         'filterValue' => 0,
         'schemeParameters' => [
@@ -219,7 +218,7 @@ echo "\n";
 echo "5. 错误处理演示:\n";
 
 // 测试错误的公司前缀长度
-$badSgtin = Gs1::Sgtin(...[
+$badSgtin = Gs1::Sgtin([
     'tagSize' => 96,
     'filterValue' => 0,
     'schemeParameters' => [
@@ -233,7 +232,7 @@ if ($badSgtin->hasError()) {
 }
 
 // 测试缺失参数
-$badSgtin2 = Gs1::Sgtin(...[
+$badSgtin2 = Gs1::Sgtin([
     'tagSize' => 96,
     'filterValue' => 0,
     'schemeParameters' => [
@@ -246,7 +245,7 @@ if ($badSgtin2->hasError()) {
 }
 
 // 测试无效的GTIN格式
-$badSgtin3 = Gs1::Sgtin(...[
+$badSgtin3 = Gs1::Sgtin([
     'tagSize' => 96,
     'filterValue' => 0,
     'schemeParameters' => [

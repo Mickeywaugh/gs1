@@ -6,7 +6,7 @@
  * GDTI (Global Document Type Identifier) 是GS1标准下用于标识文档类型的EPC编码方案
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once str_replace('mickeywaugh/gs1/examples', '', __DIR__) . 'autoload.php';
 
 use Mickeywaugh\Gs1\Gs1;
 use Mickeywaugh\Gs1\Epc\Gdti;
@@ -28,7 +28,7 @@ $filterValue = 0;          // 过滤值 (0-7)
 $CI = "1234567123456";     // 7位公司前缀 + 6位文档类型
 $serial = "ABC123";        // 序列号
 
-$gdtiEpc = Gs1::Gdti(...[
+$gdtiEpc = Gs1::Gdti([
     'tagSize' => $tagSize,
     'filterValue' => $filterValue,
     'schemeParameters' => [
@@ -99,7 +99,7 @@ $testCases = [
 ];
 
 foreach ($testCases as $case) {
-    $gdtiTest = Gs1::Gdti(...[
+    $gdtiTest = Gs1::Gdti([
         'tagSize' => 96,
         'filterValue' => 0,
         'schemeParameters' => [
@@ -196,7 +196,7 @@ echo "\n";
 echo "4. 错误处理演示:\n";
 
 // 测试错误的CI格式
-$badGdti = Gs1::Gdti(...[
+$badGdti = Gs1::Gdti([
     'tagSize' => 96,
     'filterValue' => 0,
     'schemeParameters' => [
@@ -210,7 +210,7 @@ if ($badGdti->hasError()) {
 }
 
 // 测试缺失参数
-$badGdti2 = Gs1::Gdti(...[
+$badGdti2 = Gs1::Gdti([
     'tagSize' => 96,
     'filterValue' => 0,
     'schemeParameters' => [

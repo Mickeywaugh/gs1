@@ -230,10 +230,10 @@ abstract class EpcBase
      */
     public function setCompanyPrefixLength(?int $_companyPrefixLength = 7): static
     {
-        $length = EpcSpec::getCompanyPrefixLength($this->CI) ?? $_companyPrefixLength;
+        $length = EpcSpec::getCompanyPrefixLength($this->CI) ?: $_companyPrefixLength;
 
         if (!in_array($length, $this->getCompanyPrefixLengthOptions())) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Company prefix length");
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Company prefix length is out of range. $length");
         }
 
         $this->companyPrefixLength = $length;
@@ -366,7 +366,7 @@ abstract class EpcBase
     public function setTagSize(int $tagSize): static
     {
         if (!array_key_exists($tagSize, $this->getTagSizeOptions())) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Tag size");
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Tag size is out of range. $tagSize");
         }
 
         $this->tagSize = $tagSize;
@@ -404,7 +404,7 @@ abstract class EpcBase
     public function setFilterValue(int $filterValue): static
     {
         if (!array_key_exists($filterValue, $this->getFilterValueOptions())) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Filter value");
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Filter value is out of range. $filterValue");
         }
 
         $this->filterValue = $filterValue;
