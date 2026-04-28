@@ -286,8 +286,8 @@ class Gdti extends EpcBase
      */
     public static function decode(string $epcHex): static
     {
+        $instance = new self();
         try {
-            $instance = new self();
             // 验证十六进制格式
             if (!EpcSpec::isHexChars($epcHex)) {
                 return $instance->setError(EpcMesg::EPC_HEX_FORMAT_ERROR);

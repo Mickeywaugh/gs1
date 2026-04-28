@@ -194,7 +194,7 @@ class Sgtin extends EpcBase
             return $this->setError(EpcMesg::EPC_ENCODING_ERROR);
         }
 
-        $companyPrefixLength = $this->companyPrefixLength;
+        $companyPrefixLength = $this->getCompanyPrefixLength();
 
         // 从GTIN中提取公司前缀和项目参考
         // GTIN结构: 指示符(1位) + 公司前缀 + 项目参考 + 校验位(1位)
@@ -214,7 +214,7 @@ class Sgtin extends EpcBase
 
         // 验证公司前缀长度是否在支持范围内
         if (!array_key_exists($companyPrefixLength, $standard['option'])) {
-            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "companyPrefixLength (must be 6-12)");
+            return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "companyPrefixLength (must be 6-12) now is {$companyPrefixLength}");
         }
 
         $field = $standard['option'][$companyPrefixLength]["field"];
@@ -303,8 +303,8 @@ class Sgtin extends EpcBase
      */
     public static function decode(string $epcHex): static
     {
+        $instance = new self();
         try {
-            $instance = new self();
             // 验证十六进制格式
             if (!EpcSpec::isHexChars($epcHex)) {
                 return $instance->setError(EpcMesg::EPC_HEX_FORMAT_ERROR);

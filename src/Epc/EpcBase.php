@@ -112,7 +112,7 @@ abstract class EpcBase
     /**
      * 设置错误信息
      * 
-     * @param int $errorCode 错误代码
+     * @param int $_errorCode 错误代码
      * @param mixed ...$parameters 错误消息参数
      * @return static 始终返回自身
      */
@@ -225,7 +225,7 @@ abstract class EpcBase
     /**
      * 设置公司前缀长度
      * 
-     * @param ?int $companyPrefixLength 公司前缀长度，为空时从CI自动计算
+     * @param ?int $_companyPrefixLength 公司前缀长度，为空时从CI自动计算
      * @return static 返回自身
      */
     public function setCompanyPrefixLength(?int $_companyPrefixLength = 7): static

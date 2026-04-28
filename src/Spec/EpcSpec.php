@@ -16,36 +16,36 @@ namespace Mickeywaugh\Gs1\Spec;
 
 class EpcSpec
 {
-    public static $nonZeroDigit = "123456789";
-    public static $digit = "0123456789";
-    public static $upperAlpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static $lowerAlpha = "abcdefghijklmnopqrstuvwxyz";
-    public static $otherAlpha = "!'()*+,-.:;=_";
-    public static $hexChar = "0123456789ABCDEFabcdef";
-    public static $upperHexChar = "0123456789ABCDEF";
-    public static $escape = "%FF";
-    public static $gs3A3Char;
-    public static $cpRefChar;
+    public static string $nonZeroDigit = "123456789";
+    public static string $digit = "0123456789";
+    public static string $upperAlpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static string $lowerAlpha = "abcdefghijklmnopqrstuvwxyz";
+    public static string $otherAlpha = "!'()*+,-.:;=_";
+    public static string $hexChar = "0123456789ABCDEFabcdef";
+    public static string $upperHexChar = "0123456789ABCDEF";
+    public static string $escape = "%FF";
+    public static string $gs3A3Char;
+    public static string $cpRefChar;
 
     // 将正则表达式存储为静态属性以避免每次调用时重新编译
-    public static $regUpperAlpha = '/^[A-Z]*$/';
-    public static $regLowerAlpha = '/^[a-z]*$/';
-    public static $regOtherAlpha = "/^[!'\(\)\*\+,-\.:=_\x5C]*$/";
-    public static $regHexChar = '/^[0-9A-Fa-f]*$/';
-    public static $regUpperHexChar = '/^[0-9A-F]*$/';
-    public static $regEscape = '/^%[0-9A-Fa-f]{2}*$/';
-    public static $regZeroComponent = "0";
-    public static $regNumericComponent = '/^[0-9]*$/';
-    public static $regNonZeroComponent = '/^[1-9]*$/';
-    public static $regPaddedNumericComponent = "/^[d+]*$/";
-    public static $regPaddedNumericComponentOrEmpty = "/^[d*]*$/";
-    public static $regHexComponent = "/^[0-9A-F]*$/";
-    public static $regHexComponentOrEmpty = "/^[0-9A-F*]*$/";
-    public static $regGS3A3Component = '/^[0-9A-Za-z!%-?]*$/';
-    public static $regCPRefComponent = '/^[0-9A-Za-z!%-?\%2F\%23]*$/';
+    public static string $regUpperAlpha = '/^[A-Z]*$/';
+    public static string $regLowerAlpha = '/^[a-z]*$/';
+    public static string $regOtherAlpha = "/^[!'\(\)\*\+,-\.:=_\x5C]*$/";
+    public static string $regHexChar = '/^[0-9A-Fa-f]*$/';
+    public static string $regUpperHexChar = '/^[0-9A-F]*$/';
+    public static string $regEscape = '/^%[0-9A-Fa-f]{2}*$/';
+    public static string $regZeroComponent = "0";
+    public static string $regNumericComponent = '/^[0-9]*$/';
+    public static string $regNonZeroComponent = '/^[1-9]*$/';
+    public static string $regPaddedNumericComponent = "/^[d+]*$/";
+    public static string $regPaddedNumericComponentOrEmpty = "/^[d*]*$/";
+    public static string $regHexComponent = "/^[0-9A-F]*$/";
+    public static string $regHexComponentOrEmpty = "/^[0-9A-F*]*$/";
+    public static string $regGS3A3Component = '/^[0-9A-Za-z!%-?]*$/';
+    public static string $regCPRefComponent = '/^[0-9A-Za-z!%-?\%2F\%23]*$/';
 
 
-    public static $mapHexChar = [
+    public static array $mapHexChar = [
         '21' => '!',
         '22' => '"',
         '25' => '%',
@@ -130,7 +130,7 @@ class EpcSpec
         '7A' => 'z',
     ];
 
-    public static $LEGACYAI = [
+    public static array $LEGACYAI = [
         'sgtin' => '01',
         'sscc' => '00',
         'sgln' => '414',
@@ -333,10 +333,10 @@ class EpcSpec
 
     /**
      * 编码 transfer character string to binary string
-     * @param string The source string to be transfer;
+     * @param string $string The source string to be transfer;
      * @return string The binary string;
      */
-    public static function encodingString($string): string
+    public static function encodingString(string $string): string
     {
         $stringBin = '';
         $i = 0;
@@ -353,10 +353,10 @@ class EpcSpec
 
     /**
      *解码, transfer binary string to character string
-     * @param string The binary string to be transfer;
+     * @param string $binString The binary string to be transfer;
      * @return string The character string;
      */
-    public static function decodingString($binString): string
+    public static function decodingString(string $binString): string
     {
         $retString = '';
         $len = strlen($binString);
@@ -371,11 +371,11 @@ class EpcSpec
 
 
     /**
-     * @param number The source number to be transfer;
-     * @param fromBase Source number system;
-     * @param toBase Target number system;
+     * @param string $number The source number to be transfer;
+     * @param int $fromBase Source number system;
+     * @param int $toBase Target number system;
      */
-    public static function numberBaseConvert($number, $fromBase, $toBase): string
+    public static function numberBaseConvert(string $number, int $fromBase, int $toBase): string
     {
         $number = strtolower($number);
         $digits = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -405,7 +405,7 @@ class EpcSpec
     }
 
     /**
-     * @param string The string to be transfer;
+     * @param string $string The string to be transfer;
      * @return string The ascii character string;
      */
     public static function uri2Char(string $string): string
@@ -419,7 +419,7 @@ class EpcSpec
         return substr($binString, -6);
     }
 
-    public static function stringElement2Uri($string): string
+    public static function stringElement2Uri(string $string): string
     {
         $i = 0;
         $uri = '';
@@ -437,7 +437,7 @@ class EpcSpec
     }
 
     //6-bit
-    public static function uri2symbol($string): string
+    public static function uri2symbol(string $string): string
     {
         $regStr = "/^[0-9a-fA-F-]$/";
         $regHex = "/^[\#\"\%\&\/\<\>\?]$/";
