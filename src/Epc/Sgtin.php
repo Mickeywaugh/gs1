@@ -31,18 +31,18 @@ class Sgtin extends EpcBase
         int $filterValue = 1
     ) {
         $this->setScheme("SGTIN")
-            ->setSchemeParameters($schemeParameters)
             ->setTagSize($tagSize)
-            ->setFilterValue($filterValue);
+            ->setFilterValue($filterValue)
+            ->setSchemeParameters($schemeParameters);
     }
 
     /**
      * 设置并验证方案参数
      * 
      * @param array $schemeParameters 包含'CI'和'serial'的关联数组
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function setSchemeParameters(array $schemeParameters): ?static
+    public function setSchemeParameters(array $schemeParameters): static
     {
         $requiredParams = ["CI", "serial"];
 
@@ -185,13 +185,13 @@ class Sgtin extends EpcBase
     /**
      * 编码SGTIN数据为EPC格式
      * 将GTIN和序列号转换为EPC二进制、URI和十六进制格式
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function encode(): ?static
+    public function encode(): static
     {
         // 验证GTIN
         if (!$this->validateAndExtractGtin()) {
-            return null;
+            return $this->setError(EpcMesg::EPC_ENCODING_ERROR);
         }
 
         $companyPrefixLength = $this->companyPrefixLength;
@@ -299,17 +299,17 @@ class Sgtin extends EpcBase
     /**
      * 从十六进制字符串解码SGTIN数据
      * @param string $epcHex EPC十六进制字符串
-     * @return static|null 成功时返回Sgtin实例，失败时返回null
+     * @return static  返回Sgtin实例，如果解码失败则包含错误信息
      */
-    public static function decode(string $epcHex): ?static
+    public static function decode(string $epcHex): static
     {
         try {
+            $instance = new self();
             // 验证十六进制格式
             if (!EpcSpec::isHexChars($epcHex)) {
-                return null;
+                return $instance->setError(EpcMesg::EPC_HEX_FORMAT_ERROR);
             }
 
-            $instance = new self();
             $instance->setEpcHexaDecimal($epcHex);
 
             // 解析头部信息
@@ -318,7 +318,7 @@ class Sgtin extends EpcBase
 
             $headerStruct = $instance->getHeaderStruct();
             if (empty($headerStruct)) {
-                return null;
+                return $instance->setError(EpcMesg::EPC_HEADER_ERROR);
             }
 
             // 转换并验证二进制长度
@@ -338,7 +338,7 @@ class Sgtin extends EpcBase
             // 获取编码标准
             $pattern = $instance->getEpcStandard('BINARY');
             if (empty($pattern)) {
-                return null;
+                return $instance->setError(EpcMesg::EPC_STANDARD_ERROR);
             }
 
             // 解析各个字段
@@ -406,8 +406,7 @@ class Sgtin extends EpcBase
                 ->setTagURI()
                 ->setEpcHexaDecimal($epcHex);
         } catch (\Exception $e) {
-            error_log("SGTIN decode error: " . $e->getMessage());
-            return null;
+            return $instance->setError(EpcMesg::EPC_PARSER_ERROR, "Exception during SGTIN decoding: " . $e->getMessage());
         }
     }
 

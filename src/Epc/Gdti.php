@@ -41,9 +41,9 @@ class Gdti extends EpcBase
      * 设置并验证方案参数
      * 
      * @param array $schemeParameters 包含'CI'和'serial'的关联数组
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function setSchemeParameters(array $schemeParameters): ?static
+    public function setSchemeParameters(array $schemeParameters): static
     {
         $requiredParams = ["CI", "serial"];
 
@@ -168,13 +168,13 @@ class Gdti extends EpcBase
     /**
      * 编码GDTI数据为EPC格式
      * 将公司前缀、文档类型和序列号转换为EPC二进制、URI和十六进制格式
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function encode(): ?static
+    public function encode(): static
     {
         // 验证GDTI数据
         if (!$this->validateGdti()) {
-            return null;
+            return $this->setError(EpcMesg::PARAM_FORMAT_ERROR, "Invalid GDTI data");
         }
 
         $companyPrefixLength = $this->companyPrefixLength;
@@ -282,17 +282,17 @@ class Gdti extends EpcBase
      * 从十六进制字符串解码GDTI数据
      * 
      * @param string $epcHex EPC十六进制字符串
-     * @return static|null 成功时返回Gdti实例，失败时返回null
+     * @return static 返回Gdti实例
      */
-    public static function decode(string $epcHex): ?static
+    public static function decode(string $epcHex): static
     {
         try {
+            $instance = new self();
             // 验证十六进制格式
             if (!EpcSpec::isHexChars($epcHex)) {
-                return null;
+                return $instance->setError(EpcMesg::EPC_HEX_FORMAT_ERROR);
             }
 
-            $instance = new self();
             $instance->setEpcHexaDecimal($epcHex);
 
             // 解析头部信息
@@ -301,7 +301,7 @@ class Gdti extends EpcBase
 
             $headerStruct = $instance->getHeaderStruct();
             if (empty($headerStruct)) {
-                return null;
+                return self::setError(EpcMesg::EPC_HEADER_ERROR);
             }
 
             // 转换并验证二进制长度
@@ -321,7 +321,7 @@ class Gdti extends EpcBase
             // 获取编码标准
             $pattern = $instance->getEpcStandard('BINARY');
             if (empty($pattern)) {
-                return null;
+                return $instance->setError(EpcMesg::EPC_STANDARD_ERROR);
             }
 
             // 解析各个字段
@@ -387,8 +387,7 @@ class Gdti extends EpcBase
                 ->setTagURI()
                 ->setEpcHexaDecimal($epcHex);
         } catch (\Exception $e) {
-            error_log("GDTI decode error: " . $e->getMessage());
-            return null;
+            return $instance->setError(EpcMesg::EPC_PARSER_ERROR, "Exception during GDTI decoding: " . $e->getMessage());
         }
     }
 

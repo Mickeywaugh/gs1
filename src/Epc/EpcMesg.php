@@ -77,6 +77,12 @@ class EpcMesg
     /** EPC选项不应为空 */
     const EPC_OPTION_SHOULD_NOT_EMPTY = 2026;
 
+
+    const EPC_HEADER_ERROR = 3010;
+    const EPC_PARSER_ERROR = 3012;
+    const EPC_STANDARD_ERROR = 3014;
+    const EPC_ENCODING_ERROR = 3016;
+
     // ==================== 错误消息映射表 ====================
 
     /**
@@ -107,7 +113,11 @@ class EpcMesg
         self::EPC_DEMAND_DATA_EMPTY => "Required data field is empty or null.",
         self::EPC_HEX_FORMAT_ERROR => "EPC hexadecimal string contains invalid characters. Only 0-9 and A-F are allowed.",
         self::EPC_HEX_LENGTH_ERROR => "EPC hexadecimal string length is invalid for the specified tag size.",
-        self::EPC_OPTION_SHOULD_NOT_EMPTY => "EPC option '%s' should not be empty."
+        self::EPC_OPTION_SHOULD_NOT_EMPTY => "EPC option '%s' should not be empty.",
+        self::EPC_HEADER_ERROR => "EPC header data is invalid.",
+        self::EPC_PARSER_ERROR => "EPC parsing error occurred.",
+        self::EPC_STANDARD_ERROR => "EPC standard definition is missing or invalid.",
+        self::EPC_ENCODING_ERROR => "EPC encoding error occurred.",
     ];
 
     /**

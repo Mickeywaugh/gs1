@@ -44,15 +44,15 @@ $gdtiEpc = Gs1::Gdti([
 // 执行编码
 $result = $gdtiEpc->encode();
 
-if ($result) {
-    // 获取编码结果
+if ($result->hasError()) {
+   echo "编码失败: " . $gdtiEpc->getErrorMsg() . "\n";
+} else {
+     // 获取编码结果
     echo "EPC URI: " . $gdtiEpc->getEpcUri() . "\n";
     echo "EPC Tag URI: " . $gdtiEpc->getEpcTagURI() . "\n";
     echo "EPC Raw URI: " . $gdtiEpc->getEpcRawURI() . "\n";
     echo "EPC 二进制: " . $gdtiEpc->getEpcBinary() . "\n";
     echo "EPC 十六进制: " . $gdtiEpc->getEpcHexaDecimal() . "\n";
-} else {
-    echo "编码失败: " . $gdtiEpc->getErrorMsg() . "\n";
 }
 ```
 
@@ -66,7 +66,7 @@ use Mickeywaugh\Gs1\Epc\Gdti;
 $epcHex = "3074257BF7194E7340000000";
 $decodedEpc = Gdti::decode($epcHex);
 
-if ($decodedEpc) {
+if (!$decodedEpc->hasError()) {
     echo "公司前缀长度: " . $decodedEpc->getCompanyPrefixLength() . "\n";
     echo "标签大小: " . $decodedEpc->getTagSize() . " bits\n";
     echo "过滤值: " . $decodedEpc->getFilterValue() . "\n";

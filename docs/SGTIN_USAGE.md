@@ -68,7 +68,7 @@ use Mickeywaugh\Gs1\Epc\Sgtin;
 $epcHex = "3074257BF7194E7340000000";
 $decodedEpc = Sgtin::decode($epcHex);
 
-if ($decodedEpc) {
+if ($decodedEpc->hasError() === false) {
     echo "公司前缀长度: " . $decodedEpc->getCompanyPrefixLength() . "\n";
     echo "标签大小: " . $decodedEpc->getTagSize() . " bits\n";
     echo "过滤值: " . $decodedEpc->getFilterValue() . "\n";
@@ -246,7 +246,7 @@ $sgtin = Gs1::Sgtin([
     ]
 ]);
 
-if ($sgtin->encode()) {
+if ($sgtin->encode()->hasError() === false) {
     echo "十六进制: " . $sgtin->getEpcHexaDecimal() . "\n";
     echo "URI: " . $sgtin->getEpcUri() . "\n";
     
@@ -277,7 +277,7 @@ foreach ($testCases as $case) {
         ['CI' => $case['CI'], 'serial' => '1']
     ]);
     
-    if ($sgtin->encode()) {
+    if ($sgtin->encode()->hasError() === false) {
         echo "前缀长度 {$case['prefixLen']}: " . 
              "公司前缀=" . $sgtin->getCompanyPrefix() . 
              ", 项目参考=" . $sgtin->getItemReference() . "\n";
@@ -297,7 +297,7 @@ $badSgtin = Gs1::Sgtin([
     ['CI' => '01234567890128', 'serial' => '1']
 ]);
 
-if (!$badSgtin->encode()) {
+if (!$badSgtin->encode()->hasError()) {
     echo "错误: " . $badSgtin->getErrorMsg() . "\n";
 }
 
@@ -309,7 +309,7 @@ $badSgtin2 = Gs1::Sgtin([
     ['CI' => '01234567890128']  // 缺少 serial
 ]);
 
-if (!$badSgtin2->encode()) {
+if (!$badSgtin2->encode()->hasError()) {
     echo "错误: " . $badSgtin2->getErrorMsg() . "\n";
 }
 ```

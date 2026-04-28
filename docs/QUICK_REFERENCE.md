@@ -184,7 +184,7 @@ $items = [
 $codes = [];
 foreach ($items as $item) {
     $sgtin = Gs1::Sgtin([7, 96, 1, $item]);
-    if ($sgtin->encode()) {
+    if (!$sgtin->encode()->hasError()) {
         $codes[] = $sgtin->getEpcHexaDecimal();
     }
 }
@@ -195,7 +195,7 @@ foreach ($items as $item) {
 ```php
 $sgtin = Gs1::Sgtin([7, 96, 1, ['CI' => '01234567890128', 'serial' => 'ABC']]);
 
-if (!$sgtin->encode()) {
+if ($sgtin->encode()->hasError()) {
     echo "编码失败: " . $sgtin->getErrorMsg();
 } else {
     echo "编码成功: " . $sgtin->getEpcHexaDecimal();

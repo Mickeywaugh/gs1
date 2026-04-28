@@ -39,7 +39,7 @@ $gdtiEpc = Gs1::Gdti(...[
 
 $result = $gdtiEpc->encode();
 
-if ($result) {
+if (!$result->hasError()) {
     echo "   ✓ 编码成功!\n";
     echo "   公司前缀长度: {$companyPrefixLength}\n";
     echo "   标签大小: {$tagSize} bits\n";
@@ -76,7 +76,7 @@ $gdtiEpc2 = Gs1::Gdti([
 
 $result2 = $gdtiEpc2->encode();
 
-if ($result2) {
+if (!$result2->hasError()) {
     echo "   ✓ 编码成功!\n";
     echo "   标签大小: {$tagSize} bits\n";
     echo "   序列号: {$serial}\n";
@@ -108,7 +108,7 @@ foreach ($testCases as $case) {
         ]
     ])->setCompanyPrefixLength($case['prefixLen']);
 
-    if ($gdtiTest->encode()) {
+    if (!$gdtiTest->hasError()) {
         echo "   ✓ 公司前缀长度 {$case['prefixLen']}: 公司前缀=" .
             $gdtiTest->getCompanyPrefix() . ", 文档类型=" .
             $gdtiTest->getItemReference() . "\n";
@@ -122,14 +122,14 @@ echo "\n\n";
 // ==================== 解码示例 ====================
 echo "【解码示例】\n\n";
 
-if ($result) {
+if (!$result->hasError()) {
     $epcHex = $gdtiEpc->getEpcHexaDecimal();
     echo "1. 从十六进制解码:\n";
     echo "   输入十六进制: {$epcHex}\n";
 
     $decodedEpc = Gdti::decode($epcHex);
 
-    if ($decodedEpc) {
+    if (!$decodedEpc->hasError()) {
         echo "   ✓ 解码成功!\n";
         echo "   公司前缀长度: " . $decodedEpc->getCompanyPrefixLength() . "\n";
         echo "   标签大小: " . $decodedEpc->getTagSize() . " bits\n";
@@ -163,7 +163,7 @@ echo "   输入十六进制: {$testHex}\n";
 
 $decodedEpc2 = Gdti::decode($testHex);
 
-if ($decodedEpc2) {
+if (!$decodedEpc2->hasError()) {
     echo "   ✓ 解码成功!\n";
     echo "   公司前缀长度: " . $decodedEpc2->getCompanyPrefixLength() . "\n";
     echo "   标签大小: " . $decodedEpc2->getTagSize() . " bits\n";
@@ -205,7 +205,7 @@ $badGdti = Gs1::Gdti(...[
     ]
 ])->setCompanyPrefixLength(7);
 
-if (!$badGdti->encode()) {
+if ($badGdti->hasError()) {
     echo "   ✓ 正确捕获错误: " . $badGdti->getErrorMsg() . "\n";
 }
 
@@ -218,7 +218,7 @@ $badGdti2 = Gs1::Gdti(...[
     ]
 ])->setCompanyPrefixLength(7);
 
-if (!$badGdti2->encode()) {
+if ($badGdti2->hasError()) {
     echo "   ✓ 正确捕获错误: " . $badGdti2->getErrorMsg() . "\n";
 }
 
@@ -226,7 +226,7 @@ echo "\n";
 
 // 示例5: 获取完整输出
 echo "5. 获取完整输出数据:\n";
-if ($result) {
+if (!$result->hasError()) {
     $output = $gdtiEpc->getOutput();
     echo "   输出数据结构:\n";
     echo "   - scheme: " . $output['scheme']['name'] . "\n";

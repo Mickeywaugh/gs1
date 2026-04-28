@@ -41,7 +41,7 @@ $sgtinEpc = Gs1::Sgtin([
 
 $result = $sgtinEpc->encode();
 
-if ($result) {
+if (!$result->hasError()) {
     echo "   ✓ 编码成功!\n";
     echo "   公司前缀长度: {$companyPrefixLength}\n";
     echo "   标签大小: {$tagSize} bits\n";
@@ -78,7 +78,7 @@ $sgtinEpc2 = Gs1::Sgtin(...[
 
 $result2 = $sgtinEpc2->encode();
 
-if ($result2) {
+if (!$result2->hasError()) {
     echo "   ✓ 编码成功!\n";
     echo "   标签大小: {$tagSize} bits\n";
     echo "   过滤值: {$filterValue} (Unit Load)\n";
@@ -111,7 +111,7 @@ foreach ($testCases as $case) {
         ]
     ])->setCompanyPrefixLength($case['prefixLen']);
 
-    if ($sgtinTest->encode()) {
+    if (!$sgtinTest->hasError()) {
         echo "   ✓ 公司前缀长度 {$case['prefixLen']}: 公司前缀=" .
             $sgtinTest->getCompanyPrefix() . ", 项目参考=" .
             $sgtinTest->getItemReference() . "\n";
@@ -125,14 +125,14 @@ echo "\n\n";
 // ==================== 解码示例 ====================
 echo "【解码示例】\n\n";
 
-if ($result) {
+if (!$result->hasError()) {
     $epcHex = $sgtinEpc->getEpcHexaDecimal();
     echo "1. 从十六进制解码:\n";
     echo "   输入十六进制: {$epcHex}\n";
 
     $decodedEpc = Sgtin::decode($epcHex);
 
-    if ($decodedEpc) {
+    if ($decodedEpc->hasError()) {
         echo "   ✓ 解码成功!\n";
         echo "   公司前缀长度: " . $decodedEpc->getCompanyPrefixLength() . "\n";
         echo "   标签大小: " . $decodedEpc->getTagSize() . " bits\n";
@@ -166,7 +166,7 @@ echo "   输入十六进制: {$testHex}\n";
 
 $decodedEpc2 = Sgtin::decode($testHex);
 
-if ($decodedEpc2) {
+if (!$decodedEpc2->hasError()) {
     echo "   ✓ 解码成功!\n";
     echo "   公司前缀长度: " . $decodedEpc2->getCompanyPrefixLength() . "\n";
     echo "   标签大小: " . $decodedEpc2->getTagSize() . " bits\n";
@@ -228,7 +228,7 @@ $badSgtin = Gs1::Sgtin(...[
     ]
 ])->setCompanyPrefixLength(15);  // 无效的公司前缀长度
 
-if (!$badSgtin->encode()) {
+if ($badSgtin->hasError()) {
     echo "   ✓ 正确捕获错误: " . $badSgtin->getErrorMsg() . "\n";
 }
 
@@ -241,7 +241,7 @@ $badSgtin2 = Gs1::Sgtin(...[
     ]
 ])->setCompanyPrefixLength(7);
 
-if (!$badSgtin2->encode()) {
+if ($badSgtin2->hasError()) {
     echo "   ✓ 正确捕获错误: " . $badSgtin2->getErrorMsg() . "\n";
 }
 
@@ -255,7 +255,7 @@ $badSgtin3 = Gs1::Sgtin(...[
     ]
 ])->setCompanyPrefixLength(7);
 
-if (!$badSgtin3->encode()) {
+if ($badSgtin3->hasError()) {
     echo "   ✓ 正确捕获错误: " . $badSgtin3->getErrorMsg() . "\n";
 }
 
@@ -263,7 +263,7 @@ echo "\n";
 
 // 示例6: 获取完整输出
 echo "6. 获取完整输出数据:\n";
-if ($result) {
+if (!$result->hasError()) {
     $output = $sgtinEpc->getOutput();
     echo "   输出数据结构:\n";
     echo "   - scheme: " . $output['scheme']['name'] . "\n";

@@ -114,19 +114,19 @@ abstract class EpcBase
      * 
      * @param int $errorCode 错误代码
      * @param mixed ...$parameters 错误消息参数
-     * @return null 始终返回null表示失败
+     * @return static 始终返回自身
      */
-    public function setError(int $_errorCode, ...$parameters): null
+    public function setError(int $_errorCode, ...$parameters): static
     {
         $this->errorCode = $_errorCode;
         $this->errorMsg = EpcMesg::getMessage($_errorCode, ...$parameters);
-        return null;
+        return $this;
     }
 
     /**
      * 获取错误消息
      * 
-     * @return string|null 错误消息，无错误时返回null
+     * @return ?string 错误消息，无错误时返回null
      */
     public function getErrorMsg(): ?string
     {
@@ -158,10 +158,10 @@ abstract class EpcBase
     /**
      * 设置EPC方案
      * 
-     * @param string|null $scheme 方案名称，为空时从headerStruct中获取
-     * @return static|null 成功时返回自身，失败时返回null
+     * @param string $scheme 方案名称，为空时从headerStruct中获取
+     * @return static 返回自身
      */
-    public function setScheme(?string $scheme = ""): ?static
+    public function setScheme(?string $scheme = ""): static
     {
         if (empty($scheme)) {
             if (isset($this->headerStruct['scheme'])) {
@@ -192,7 +192,7 @@ abstract class EpcBase
     /**
      * 获取当前方案
      * 
-     * @return string|null 方案名称
+     * @return ?string 方案名称
      */
     public function getScheme(): ?string
     {
@@ -225,10 +225,10 @@ abstract class EpcBase
     /**
      * 设置公司前缀长度
      * 
-     * @param int|null $companyPrefixLength 公司前缀长度，为空时从CI自动计算
-     * @return static|null 成功时返回自身，失败时返回null
+     * @param ?int $companyPrefixLength 公司前缀长度，为空时从CI自动计算
+     * @return static 返回自身
      */
-    public function setCompanyPrefixLength(?int $_companyPrefixLength = 7): ?static
+    public function setCompanyPrefixLength(?int $_companyPrefixLength = 7): static
     {
         $length = EpcSpec::getCompanyPrefixLength($this->CI) ?? $_companyPrefixLength;
 
@@ -361,9 +361,9 @@ abstract class EpcBase
      * 设置标签大小
      * 
      * @param int $tagSize 标签大小（位数）
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function setTagSize(int $tagSize): ?static
+    public function setTagSize(int $tagSize): static
     {
         if (!array_key_exists($tagSize, $this->getTagSizeOptions())) {
             return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Tag size");
@@ -399,9 +399,9 @@ abstract class EpcBase
      * 设置过滤值
      * 
      * @param int $filterValue 过滤值
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static|null 返回自身
      */
-    public function setFilterValue(int $filterValue): ?static
+    public function setFilterValue(int $filterValue): static
     {
         if (!array_key_exists($filterValue, $this->getFilterValueOptions())) {
             return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Filter value");
@@ -437,9 +437,9 @@ abstract class EpcBase
      * 设置方案参数
      * 
      * @param array $schemeParameters 方案参数字典
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function setSchemeParameters(array $schemeParameters): ?static
+    public function setSchemeParameters(array $schemeParameters): static
     {
         if (empty($schemeParameters)) {
             return $this->setError(EpcMesg::EPC_OPTION_MISSING, 'scheme parameters');
@@ -471,9 +471,9 @@ abstract class EpcBase
      * 设置EPC十六进制值
      * 
      * @param string $epcHexaDecimal 十六进制字符串
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function setEpcHexaDecimal(string $epcHexaDecimal): ?static
+    public function setEpcHexaDecimal(string $epcHexaDecimal): static
     {
         if (empty($epcHexaDecimal)) {
             return $this->setError(EpcMesg::PARAM_SHOULD_NOT_EMPTY, "epcHexaDecimal");
@@ -591,12 +591,12 @@ abstract class EpcBase
      * 设置头部结构
      * 
      * @param string $headerValue 头部十六进制值
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      */
-    public function setHeaderStruct(string $headerValue): ?static
+    public function setHeaderStruct(string $headerValue): static
     {
         if (empty($headerValue)) {
-            return null;
+            return $this->setError(EpcMesg::PARAM_SHOULD_NOT_EMPTY, "headerValue");
         }
 
         $this->headerStruct = EpcSpec::getHeaderValues($headerValue);
@@ -638,10 +638,10 @@ abstract class EpcBase
      * 
      * 此方法应在子类中实现具体的编码逻辑
      * 
-     * @return static|null 成功时返回自身，失败时返回null
+     * @return static 返回自身
      * @abstract
      */
-    abstract public function encode(): ?static;
+    abstract public function encode(): static;
 
     /**
      * 解码EPC数据
@@ -651,7 +651,7 @@ abstract class EpcBase
      * @param string $epcHexString EPC十六进制字符串
      * @return static|null 成功时返回实例，失败时返回null
      */
-    abstract public static function decode(string $epcHexString): ?static;
+    abstract public static function decode(string $epcHexString): static;
 
     // ==================== 工具方法 ====================
 
