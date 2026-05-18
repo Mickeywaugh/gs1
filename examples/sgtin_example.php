@@ -20,14 +20,13 @@ echo "【编码示例】\n\n";
 
 // 示例1: 96位标签编码
 echo "1. 96位 SGTIN 编码:\n";
-$companyPrefixLength = 7;  // 公司前缀长度 (6-12)
 $tagSize = 96;             // 标签大小 (96 或 198)
 $filterValue = 1;          // 过滤值 (0-7)，1表示POS零售商品
 
 // CI (Company Identifier) = GTIN，共14位（包含校验位）
 // 结构：指示符(1位) + 公司前缀 + 项目参考 + 校验位(1位)
-$CI = "01234567890128";    // 14位GTIN
-$serial = "ABC123";        // 序列号
+$CI = "06957680700260";    // 14位GTIN
+$serial = "235149808961";        // 序列号
 
 $sgtinEpc = Gs1::Sgtin([
     'tagSize' => $tagSize,
@@ -42,7 +41,7 @@ $result = $sgtinEpc->encode();
 
 if (!$result->hasError()) {
     echo "   ✓ 编码成功!\n";
-    echo "   公司前缀长度: {$companyPrefixLength}\n";
+    echo "   公司前缀长度: {$result->getCompanyPrefixLength()}\n";
     echo "   标签大小: {$tagSize} bits\n";
     echo "   过滤值: {$filterValue} (Point of Sale Trade Item)\n";
     echo "   GTIN (CI): {$CI}\n";
@@ -64,7 +63,7 @@ echo "\n";
 echo "2. 198位 SGTIN 编码 (可变长度):\n";
 $tagSize = 198;
 $filterValue = 6;  // 6表示单元负载
-$serial = "SERIAL-2024-001-XYZ";  // 更长的序列号
+$serial = "235149808961";  // 更长的序列号
 
 $sgtinEpc2 = Gs1::Sgtin([
     'tagSize' => $tagSize,
@@ -73,7 +72,7 @@ $sgtinEpc2 = Gs1::Sgtin([
         'CI' => $CI,
         'serial' => $serial
     ]
-])->setCompanyPrefixLength($companyPrefixLength);
+]);
 
 $result2 = $sgtinEpc2->encode();
 
@@ -81,6 +80,7 @@ if (!$result2->hasError()) {
     echo "   ✓ 编码成功!\n";
     echo "   标签大小: {$tagSize} bits\n";
     echo "   过滤值: {$filterValue} (Unit Load)\n";
+    echo "   公司前缀长度: {$result2->getCompanyPrefixLength()}\n";
     echo "   序列号: {$serial}\n";
     echo "   EPC URI: " . $sgtinEpc2->getEpcUri() . "\n";
     echo "   EPC Tag URI: " . $sgtinEpc2->getEpcTagURI() . "\n";

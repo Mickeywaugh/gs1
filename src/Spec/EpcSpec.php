@@ -487,39 +487,32 @@ class EpcSpec
     }
 
     /**
-     * @param string $gtinUpc The GTIN/UPC value;
+     * @param string $CI The GTIN/UPC value;
      * @return int The company prefix length, default value is 7;
      */
-    public static function getCompanyPrefixLength(string $gtinUpc): int
+    public static function getCompanyPrefixLength(string $ci): int
     {
         // 使用静态缓存避免重复加载XML文件
         static $xmlCache = null;
-        static $prefixMap = null;
-        $default = 7;
-        if ($prefixMap === null) {
-            $GCPFile = __DIR__ . '/resData/gcpprefixformatlist.xml';
-
-            if (!is_file($GCPFile)) {
-                return $default;
-            }
-
-            // 首次加载时解析XML并构建映射表
-            if ($xmlCache === null) {
-                $xmlCache = simplexml_load_file($GCPFile, "SimpleXMLElement", LIBXML_NOCDATA);
-            }
-
-            // 构建前缀到长度的映射表以提高查询性能
-            $prefixMap = [];
-            foreach ($xmlCache->xpath("//node()") as $node) {
-                $prefix = (string)$node->attributes()->prefix;
-                $gcpLength = (int)$node->attributes()->gcpLength;
-                if (!empty($prefix)) {
-                    $prefixMap[$prefix] = $gcpLength;
-                }
-            }
+        $prefixLenth = 7;
+        $GCPFile = __DIR__ . '/resData/gcpprefixformatlist.xml';
+        if (!is_file($GCPFile)) {
+            return $prefixLenth;
         }
 
-        // 从映射表中查找公司前缀长度
-        return $prefixMap[$gtinUpc] ?? $default;
+        // 首次加载时解析XML并构建映射表
+        if ($xmlCache === null) {
+            $xmlCache = simplexml_load_file($GCPFile, "SimpleXMLElement", LIBXML_NOCDATA);
+        }
+
+        foreach ($xmlCache as $node) {
+            $prefix = (string)$node->attributes()->prefix[0];
+            $gcpLength = (int)$node->attributes()->gcpLength[0];
+            if (strpos($ci, $prefix) === 1) {
+                $prefixLenth = $gcpLength;
+                break;
+            }
+        }
+        return $prefixLenth;
     }
 }
