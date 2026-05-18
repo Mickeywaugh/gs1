@@ -230,8 +230,11 @@ abstract class EpcBase
      */
     public function setCompanyPrefixLength(?int $_companyPrefixLength = 7): static
     {
-        $length = EpcSpec::getCompanyPrefixLength($this->CI) ?: $_companyPrefixLength;
-
+        $length = $_companyPrefixLength;
+        $catchLenth = EpcSpec::getCompanyPrefixLength($this->CI);
+        if ($catchLenth > 0) {
+            $length = $catchLenth;
+        }
         if (!in_array($length, $this->getCompanyPrefixLengthOptions())) {
             return $this->setError(EpcMesg::PARAM_OUTOF_RANGE, "Company prefix length is out of range. $length");
         }

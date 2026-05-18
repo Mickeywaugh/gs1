@@ -488,19 +488,19 @@ class EpcSpec
 
     /**
      * @param string $gtinUpc The GTIN/UPC value;
-     * @return int The company prefix length;
+     * @return int The company prefix length, default value is 7;
      */
     public static function getCompanyPrefixLength(string $gtinUpc): int
     {
         // 使用静态缓存避免重复加载XML文件
         static $xmlCache = null;
         static $prefixMap = null;
-
+        $default = 7;
         if ($prefixMap === null) {
             $GCPFile = __DIR__ . '/resData/gcpprefixformatlist.xml';
 
             if (!is_file($GCPFile)) {
-                return 0;
+                return $default;
             }
 
             // 首次加载时解析XML并构建映射表
@@ -520,6 +520,6 @@ class EpcSpec
         }
 
         // 从映射表中查找公司前缀长度
-        return $prefixMap[$gtinUpc] ?? 0;
+        return $prefixMap[$gtinUpc] ?? $default;
     }
 }
